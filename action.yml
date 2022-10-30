@@ -1,0 +1,78 @@
+name: Release Please
+description: "Release please workflow with npm, git, pnpm, and pre-release scripts"
+inputs:
+  NPM_TOKEN:
+    description: NPM Token
+    required: true
+  GITHUB_TOKEN:
+    description: GitHub Personal Access Token
+    required: false
+  NPM_REGISTRY:
+    description: "NPM Registry (default: '//registry.npmjs.org/')"
+    required: false
+  PUBLISH_SCRIPT:
+    description: "Run an npm script instead of the default publish command: `pnpm publish --ignore-scripts`"
+    required: false
+  PRERELEASE_SCRIPTS:
+    description: "package.json scripts to run before release. (default: 'build,lint,test,docs')"
+    required: false
+  VERBOSE:
+    description: "Verbose output [true/false] (default: false)"
+    required: false
+  NO_BAIL:
+    description: "Bail on prerelease failures [true/false] (default: false)"
+    required: false
+  BAIL_ON_MISSING:
+    description: "Bail on missing prerelease script [true/false] (default: false)"
+    required: false
+  DRY_RUN:
+    description: "Commands will be printed instead of executed. [true/false/publish-only] (default: false).
+      If 'publish-only' is specified, all commands will run normally except for the 'publish' command, which will be run with the `--dry-run` flag."
+    required: false
+outputs:
+  release_created:
+    description: Whether a release was created
+    value: ${{ steps.release.outputs.release_created }}
+runs:
+  using: composite
+  steps:
+    - uses: google-github-actions/release-please-action@v3
+      id: release
+      with:
+        release-type: node
+        package-name: ${{ github.repository }}
+        token: ${{ secrets.GH_TOKEN }}
+
+    - name: Checkout
+      if: ${{ step.release.outputs.release_created }}
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        token: ${{ inputs.GITHUB_TOKEN }}
+
+    - uses: pnpm/action-setup@v2.2.4
+      if: ${{ step.release.outputs.release_created }}
+      with:
+        version: 7
+
+    - name: Setup Node.js
+      if: ${{ step.release.outputs.release_created }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: "lts/*"
+        cache: pnpm
+
+    - name: Run release script
+      if: ${{ step.release.outputs.release_created }}
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
+        NPM_REGISTRY: ${{ inputs.NPM_REGISTRY }}
+        PUBLISH_SCRIPT: ${{ inputs.PUBLISH_SCRIPT }}
+        PRERELEASE_SCRIPTS: ${{ inputs.PRERELEASE_SCRIPTS }}
+        VERBOSE: ${{ inputs.VERBOSE }}
+        NO_BAIL: ${{ inputs.NO_BAIL }}
+        BAIL_ON_MISSING: ${{ inputs.BAIL_ON_MISSING }}
+        DRY_RUN: ${{ inputs.DRY_RUN }}
+      run: ${{ github.action_path }}/release.sh
+      shell: bash
