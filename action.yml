@@ -3,7 +3,7 @@ description: "Release please workflow with npm, git, pnpm, and pre-release scrip
 inputs:
   NPM_TOKEN:
     description: NPM Token
-    required: true
+    required: false
   GITHUB_TOKEN:
     description: GitHub Personal Access Token
     required: false

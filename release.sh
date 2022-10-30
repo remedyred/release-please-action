@@ -3,7 +3,7 @@
 set -e
 
 # Auth
-NPM_TOKEN=${NPM_TOKEN:-${NPM_AUTH_TOKEN:-}}
+NPM_TOKEN=${NPM_TOKEN:-}
 NPM_REGISTRY=${NPM_REGISTRY:-"//registry.npmjs.org/"}
 
 [[ "$NPM_REGISTRY" =~ /$ ]] || NPM_REGISTRY="$NPM_REGISTRY/"
@@ -71,7 +71,7 @@ runScript() {
 function publish() {
   if [[ -n "$PUBLISH_SCRIPT" ]]; then
     runScript "$PUBLISH_SCRIPT"
-  else
+  elif [[ -n "$NPM_TOKEN" ]] && ! jq -e ".private" package.json > /dev/null; then
     if [ "$DRY_RUN" = true ] || [[ "$DRY_RUN" == "publish-only" ]]; then
       $PUBLISH_COMMAND --dry-run
     else
@@ -80,9 +80,11 @@ function publish() {
   fi
 }
 
-# Set NPM_TOKEN
-echo "Configuring NPM Token"
-npm config set "$NPM_REGISTRY" "$NPM_TOKEN"
+if [[ -n "$NPM_TOKEN" ]]; then
+  # Set NPM_TOKEN
+  echo "Configuring NPM authentication"
+  npm config set "$NPM_REGISTRY" "$NPM_TOKEN"
+fi
 
 echo "Install dependencies"
 pnpm install --frozen-lockfile
