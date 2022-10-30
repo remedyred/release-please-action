@@ -1,0 +1,14 @@
+{
+	"name": "@remedyred/release-please-action",
+	"version": "0.0.0",
+	"private": true,
+	"license": "MIT",
+	"scripts": {
+		"lint": "eslint .",
+		"lint:fix": "eslint \"**/*.{json,yml,yaml}\" --fix"
+	},
+	"devDependencies": {
+		"@snickbit/eslint-config": "1.4.0",
+		"eslint": "8.24.0"
+	}
+}
