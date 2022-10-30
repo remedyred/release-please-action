@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/remedyred/release-please-action/compare/v1.0.0...v1.1.0) (2022-10-30)
+
+
+### Features
+
+* make publishing to npm optional ([a2413b3](https://github.com/remedyred/release-please-action/commit/a2413b36a0f95bfe5773e63ef9358d9d5ead5bab))
+
+
+### Bug Fixes
+
+* replace secrets with inputs ([59abd31](https://github.com/remedyred/release-please-action/commit/59abd31195a14a34848c6efcea478440b0d008af))
+
 ## 1.0.0 (2022-10-30)
 
 
