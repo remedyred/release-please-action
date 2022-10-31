@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/remedyred/release-please-action/compare/v1.1.0...v1.1.1) (2022-10-31)
+
+
+### Bug Fixes
+
+* rename 'step' to 'steps' ([768afc0](https://github.com/remedyred/release-please-action/commit/768afc0e191ffdd542256bba924ac8d9a15dcbf3))
+
 ## [1.1.0](https://github.com/remedyred/release-please-action/compare/v1.0.0...v1.1.0) (2022-10-30)
 
 
