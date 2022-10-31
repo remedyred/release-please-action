@@ -33,10 +33,10 @@ inputs:
     description: "Prints debug information. [true/false] (default: false)"
     required: false
   VERIFY_ONLY:
-    description: "Prints debug information. [true/false] (default: false)"
+    description: "Only verify configuration. [true/false] (default: false)"
     required: false
   SKIP_PUBLISH:
-    description: "Prints debug information. [true/false] (default: false)"
+    description: "Skip publish command. [true/false] (default: false)"
     required: false
 outputs:
   release_created:
