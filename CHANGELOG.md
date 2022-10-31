@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/remedyred/release-please-action/compare/v1.1.2...v1.1.3) (2022-10-31)
+
+
+### Bug Fixes
+
+* improve dep install ([64f23b2](https://github.com/remedyred/release-please-action/commit/64f23b287e6f69d1ce35c53b34c960305c71049a))
+
 ## [1.1.2](https://github.com/remedyred/release-please-action/compare/v1.1.1...v1.1.2) (2022-10-31)
 
 
