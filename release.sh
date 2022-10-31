@@ -118,6 +118,11 @@ if [[ -n "$NPM_TOKEN" ]]; then
   fi
 
   $NPM_CONFIG_COMMAND
+
+  if ! npm whoami >/dev/null; then
+    echo "NPM authentication failed"
+    exit 1
+  fi
 fi
 
 install
