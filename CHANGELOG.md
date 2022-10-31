@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.4](https://github.com/remedyred/release-please-action/compare/v1.1.3...v1.1.4) (2022-10-31)
+
+
+### Bug Fixes
+
+* add --if-present failsafe ([6159b5f](https://github.com/remedyred/release-please-action/commit/6159b5fed81d630fb1b265239ab20ef0e0b31583))
+
 ## [1.1.3](https://github.com/remedyred/release-please-action/compare/v1.1.2...v1.1.3) (2022-10-31)
 
 
