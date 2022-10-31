@@ -124,11 +124,13 @@ if [[ -n "$NPM_TOKEN" ]]; then
     echo "NPM authentication failed"
     exit 1
   fi
+else
+  echo "No NPM_TOKEN provided, skipping NPM authentication"
+fi
 
-  if [[ "$VERIFY_ONLY" == "true" ]]; then
-    echo "NPM authentication successful"
-    exit 0
-  fi
+if [[ "$VERIFY_ONLY" == "true" ]]; then
+  echo "NPM configuration verified"
+  exit 0
 fi
 
 install
