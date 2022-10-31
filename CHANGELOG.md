@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.4](https://github.com/remedyred/release-please-action/compare/v1.3.3...v1.3.4) (2022-10-31)
+
+
+### Bug Fixes
+
+* add better descriptions ([82c72fa](https://github.com/remedyred/release-please-action/commit/82c72fa544cfc832483b2489d41eb19aa9c3cc73))
+* add debug to env ([71c26cf](https://github.com/remedyred/release-please-action/commit/71c26cf379ac9e0bdc98dc6cd7981f24e5d141e8))
+
 ## [1.3.3](https://github.com/remedyred/release-please-action/compare/v1.3.2...v1.3.3) (2022-10-31)
 
 
