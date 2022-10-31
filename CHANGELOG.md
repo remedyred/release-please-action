@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0](https://github.com/remedyred/release-please-action/compare/v1.2.0...v1.3.0) (2022-10-31)
+
+
+### Features
+
+* add ability to just verify the config or just skip the publish ([9481788](https://github.com/remedyred/release-please-action/commit/9481788b74b0c9cd540a2b9af1a4ba11ada244f8))
+
+
+### Bug Fixes
+
+* add auth error message ([9d28350](https://github.com/remedyred/release-please-action/commit/9d28350ac6da699f942658843bed59a9af2481c5))
+
 ## [1.2.0](https://github.com/remedyred/release-please-action/compare/v1.1.4...v1.2.0) (2022-10-31)
 
 
