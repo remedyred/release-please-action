@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/remedyred/release-please-action/compare/v1.1.4...v1.2.0) (2022-10-31)
+
+
+### Features
+
+* add improved debugging ([bb67d8f](https://github.com/remedyred/release-please-action/commit/bb67d8fb8996fb18326addb5b0aa15c2cc204781))
+
 ## [1.1.4](https://github.com/remedyred/release-please-action/compare/v1.1.3...v1.1.4) (2022-10-31)
 
 
