@@ -32,6 +32,12 @@ inputs:
   DEBUG:
     description: "Prints debug information. [true/false] (default: false)"
     required: false
+  VERIFY_ONLY:
+    description: "Prints debug information. [true/false] (default: false)"
+    required: false
+  SKIP_PUBLISH:
+    description: "Prints debug information. [true/false] (default: false)"
+    required: false
 outputs:
   release_created:
     description: Whether a release was created
@@ -39,36 +45,9 @@ outputs:
 runs:
   using: composite
   steps:
-    - uses: google-github-actions/release-please-action@v3
-      id: release
-      with:
-        release-type: node
-        package-name: ${{ github.repository }}
-        token: ${{ inputs.GITHUB_TOKEN || github.token }}
-
-    - name: Checkout
-      if: ${{ steps.release.outputs.release_created }}
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-        token: ${{ inputs.GITHUB_TOKEN }}
-
-    - uses: pnpm/action-setup@v2.2.4
-      if: ${{ steps.release.outputs.release_created }}
-      with:
-        version: 7
-
-    - name: Setup Node.js
-      if: ${{ steps.release.outputs.release_created }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: "lts/*"
-        cache: pnpm
-
-    - name: Run release script
-      if: ${{ steps.release.outputs.release_created }}
+    - name: Verify configuration
       env:
-        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN || github.token }}
         NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
         NPM_REGISTRY: ${{ inputs.NPM_REGISTRY }}
         PUBLISH_SCRIPT: ${{ inputs.PUBLISH_SCRIPT }}
@@ -77,5 +56,50 @@ runs:
         NO_BAIL: ${{ inputs.NO_BAIL }}
         BAIL_ON_MISSING: ${{ inputs.BAIL_ON_MISSING }}
         DRY_RUN: ${{ inputs.DRY_RUN }}
+        SKIP_PUBLISH: ${{ inputs.SKIP_PUBLISH }}
+        VERIFY_ONLY: "true"
+      run: ${{ github.action_path }}/release.sh
+      shell: bash
+
+    - uses: google-github-actions/release-please-action@v3
+      if: ${{ inputs.VERIFY_ONLY != 'true' }}
+      id: release
+      with:
+        release-type: node
+        package-name: ${{ github.repository }}
+        token: ${{ inputs.GITHUB_TOKEN || github.token }}
+
+    - name: Checkout
+      if: ${{ inputs.VERIFY_ONLY != 'true' && steps.release.outputs.release_created }}
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        token: ${{ inputs.GITHUB_TOKEN }}
+
+    - uses: pnpm/action-setup@v2.2.4
+      if: ${{ inputs.VERIFY_ONLY != 'true' && steps.release.outputs.release_created }}
+      with:
+        version: 7
+
+    - name: Setup Node.js
+      if: ${{ inputs.VERIFY_ONLY != 'true' && steps.release.outputs.release_created }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: "lts/*"
+        cache: pnpm
+
+    - name: Run release script
+      if: ${{ inputs.VERIFY_ONLY != 'true' && steps.release.outputs.release_created }}
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN || github.token }}
+        NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
+        NPM_REGISTRY: ${{ inputs.NPM_REGISTRY }}
+        PUBLISH_SCRIPT: ${{ inputs.PUBLISH_SCRIPT }}
+        PRERELEASE_SCRIPTS: ${{ inputs.PRERELEASE_SCRIPTS }}
+        VERBOSE: ${{ inputs.VERBOSE }}
+        NO_BAIL: ${{ inputs.NO_BAIL }}
+        BAIL_ON_MISSING: ${{ inputs.BAIL_ON_MISSING }}
+        DRY_RUN: ${{ inputs.DRY_RUN }}
+        SKIP_PUBLISH: ${{ inputs.SKIP_PUBLISH }}
       run: ${{ github.action_path }}/release.sh
       shell: bash

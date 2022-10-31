@@ -123,6 +123,11 @@ if [[ -n "$NPM_TOKEN" ]]; then
     echo "NPM authentication failed"
     exit 1
   fi
+
+  if [[ "$VERIFY_ONLY" == "true" ]]; then
+    echo "NPM authentication successful"
+    exit 0
+  fi
 fi
 
 install
@@ -130,5 +135,10 @@ install
 for script in "${PRERELEASE_SCRIPTS_ARRAY[@]}"; do
   runScript "$script"
 done
+
+if [[ "$SKIP_PUBLISH" == "true" ]]; then
+  echo "Finished!"
+  exit 0
+fi
 
 publish
