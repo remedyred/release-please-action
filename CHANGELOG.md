@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.6](https://github.com/remedyred/release-please-action/compare/v1.3.5...v1.3.6) (2022-10-31)
+
+
+### Bug Fixes
+
+* checkout first ([16e8020](https://github.com/remedyred/release-please-action/commit/16e8020c824544ef827aa6e6e341556bf575b709))
+
 ## [1.3.5](https://github.com/remedyred/release-please-action/compare/v1.3.4...v1.3.5) (2022-10-31)
 
 
