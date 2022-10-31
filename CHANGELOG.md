@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/remedyred/release-please-action/compare/v1.3.0...v1.3.1) (2022-10-31)
+
+
+### Bug Fixes
+
+* script permissions ([43bf461](https://github.com/remedyred/release-please-action/commit/43bf461f1d7b99fc6c355b071e8c9d140eb230d2))
+
 ## [1.3.0](https://github.com/remedyred/release-please-action/compare/v1.2.0...v1.3.0) (2022-10-31)
 
 
