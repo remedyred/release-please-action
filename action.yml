@@ -32,7 +32,7 @@ inputs:
   DEBUG:
     description: "Prints debug information. [true/false] (default: false)"
     required: false
-  VERIFY_ONLY:
+  CONFIG_ONLY:
     description: "Only verify configuration. [true/false] (default: false)"
     required: false
   SKIP_PUBLISH:
@@ -45,6 +45,16 @@ outputs:
 runs:
   using: composite
   steps:
+    - uses: pnpm/action-setup@v2.2.4
+      with:
+        version: 7
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: "lts/*"
+        cache: pnpm
+
     - name: Verify configuration
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN || github.token }}
@@ -58,12 +68,12 @@ runs:
         DRY_RUN: ${{ inputs.DRY_RUN }}
         DEBUG: ${{ inputs.DEBUG }}
         SKIP_PUBLISH: ${{ inputs.SKIP_PUBLISH }}
-        VERIFY_ONLY: "true"
-      run: ${{ github.action_path }}/release.sh
+        CONFIG_ONLY: "true"
+      run: ${{ github.action_path }}/src/config.sh
       shell: bash
 
     - uses: google-github-actions/release-please-action@v3
-      if: ${{ inputs.VERIFY_ONLY != 'true' }}
+      if: ${{ inputs.CONFIG_ONLY != 'true' }}
       id: release
       with:
         release-type: node
@@ -71,26 +81,14 @@ runs:
         token: ${{ inputs.GITHUB_TOKEN || github.token }}
 
     - name: Checkout
-      if: ${{ inputs.VERIFY_ONLY != 'true' && steps.release.outputs.release_created }}
+      if: ${{ inputs.CONFIG_ONLY != 'true' && steps.release.outputs.release_created }}
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
         token: ${{ inputs.GITHUB_TOKEN }}
 
-    - uses: pnpm/action-setup@v2.2.4
-      if: ${{ inputs.VERIFY_ONLY != 'true' && steps.release.outputs.release_created }}
-      with:
-        version: 7
-
-    - name: Setup Node.js
-      if: ${{ inputs.VERIFY_ONLY != 'true' && steps.release.outputs.release_created }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: "lts/*"
-        cache: pnpm
-
     - name: Run release script
-      if: ${{ inputs.VERIFY_ONLY != 'true' && steps.release.outputs.release_created }}
+      if: ${{ inputs.CONFIG_ONLY != 'true' && steps.release.outputs.release_created }}
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN || github.token }}
         NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
@@ -103,5 +101,5 @@ runs:
         DRY_RUN: ${{ inputs.DRY_RUN }}
         DEBUG: ${{ inputs.DEBUG }}
         SKIP_PUBLISH: ${{ inputs.SKIP_PUBLISH }}
-      run: ${{ github.action_path }}/release.sh
+      run: ${{ github.action_path }}/src/release.sh
       shell: bash
