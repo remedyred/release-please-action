@@ -37,8 +37,6 @@ has_script() {
 #:: run_script <script_name>
 runScript() {
   local script_name="$1"
-  local silent="$2"
-
   local PARAMS=""
 
   if has_script "$script_name"; then
@@ -79,14 +77,28 @@ function publish() {
   fi
 }
 
+function install() {
+  echo "Install dependencies"
+  local PNPM_INSTALL_COMMAND="pnpm install"
+
+  if [[ -f "pnpm-lock.yaml" ]]; then
+    PNPM_INSTALL_COMMAND="$PNPM_INSTALL_COMMAND --frozen-lockfile"
+  fi
+
+  if [[ "$VERBOSE" != "true" ]]; then
+    PNPM_INSTALL_COMMAND="$PNPM_INSTALL_COMMAND --silent"
+  fi
+
+  $PNPM_INSTALL_COMMAND
+}
+
 if [[ -n "$NPM_TOKEN" ]]; then
   # Set NPM_TOKEN
   echo "Configuring NPM authentication"
   npm config set "$NPM_REGISTRY" "$NPM_TOKEN"
 fi
 
-echo "Install dependencies"
-pnpm install --frozen-lockfile
+install
 
 for script in "${PRERELEASE_SCRIPTS_ARRAY[@]}"; do
   runScript "$script"
