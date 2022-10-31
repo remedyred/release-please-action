@@ -41,7 +41,7 @@ runs:
       with:
         release-type: node
         package-name: ${{ github.repository }}
-        token: ${{ inputs.GITHUB_TOKEN }}
+        token: ${{ inputs.GITHUB_TOKEN || github.token }}
 
     - name: Checkout
       if: ${{ steps.release.outputs.release_created }}
