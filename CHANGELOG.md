@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.5](https://github.com/remedyred/release-please-action/compare/v1.3.4...v1.3.5) (2022-10-31)
+
+
+### Bug Fixes
+
+* permissions ([2973bde](https://github.com/remedyred/release-please-action/commit/2973bde492898d1c35ddb638c6f645b7baa3bdd1))
+* split scripts for better separation of scope ([1773962](https://github.com/remedyred/release-please-action/commit/1773962292fbe605c5cc3385e70de60788b836cf))
+
 ## [1.3.4](https://github.com/remedyred/release-please-action/compare/v1.3.3...v1.3.4) (2022-10-31)
 
 
