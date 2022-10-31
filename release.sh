@@ -37,23 +37,23 @@ has_script() {
 #:: run_script <script_name>
 runScript() {
   local script_name="$1"
-  local PARAMS=""
+  local PNPM_RUN_COMMAND="pnpm run --if-present"
 
   if has_script "$script_name"; then
     echo "Running $script_name"
 
     if [[ "$VERBOSE" != "true" ]]; then
-      PARAMS="$PARAMS --silent"
+      PNPM_RUN_COMMAND="$PNPM_RUN_COMMAND --silent"
     fi
 
-    if [[ "$NO_BAIL" != "true" ]]; then
-      PARAMS="$PARAMS --no-bail"
+    if [[ "$NO_BAIL" == "true" ]]; then
+      PNPM_RUN_COMMAND="$PNPM_RUN_COMMAND --no-bail"
     fi
 
     if [ "$DRY_RUN" = true ]; then
-      echo "[DRY RUN] pnpm run $PARAMS $script_name"
+      echo "[DRY RUN] $PNPM_RUN_COMMAND $script_name"
     else
-      pnpm run "$PARAMS $script_name"
+      "$PNPM_RUN_COMMAND" "$script_name"
     fi
   else
     echo "No script found for $script_name"

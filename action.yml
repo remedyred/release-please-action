@@ -20,7 +20,7 @@ inputs:
     description: "Verbose output [true/false] (default: false)"
     required: false
   NO_BAIL:
-    description: "Bail on prerelease failures [true/false] (default: false)"
+    description: "Don't bail on prerelease script failures [true/false] (default: false)"
     required: false
   BAIL_ON_MISSING:
     description: "Bail on missing prerelease script [true/false] (default: false)"
