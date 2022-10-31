@@ -13,7 +13,7 @@ NPM_REGISTRY=${NPM_REGISTRY:-"//registry.npmjs.org/"}
 PUBLISH_SCRIPT=${PUBLISH_SCRIPT:-}
 
 PRERELEASE_SCRIPTS=${PRERELEASE_SCRIPTS:-"build,lint,test,docs"}
-IFS=', ' read -r -a PRERELEASE_SCRIPTS_ARRAY <<< "$PRERELEASE_SCRIPTS"
+IFS=', ' read -r -a PRERELEASE_SCRIPTS_ARRAY <<<"$PRERELEASE_SCRIPTS"
 
 PUBLISH_COMMAND="pnpm publish --ignore-scripts"
 
@@ -22,7 +22,6 @@ DRY_RUN=${DRY_RUN:-false}
 VERBOSE=${VERBOSE:-false}
 NO_BAIL=${NO_BAIL:-false}
 BAIL_ON_MISSING=${BAIL_ON_MISSING:-false}
-
 
 AVAILABLE_SCRIPTS=$(npm run)
 # Check if npm script exists
@@ -71,7 +70,7 @@ runScript() {
 function publish() {
   if [[ -n "$PUBLISH_SCRIPT" ]]; then
     runScript "$PUBLISH_SCRIPT"
-  elif [[ -n "$NPM_TOKEN" ]] && ! jq -e ".private" package.json > /dev/null; then
+  elif [[ -n "$NPM_TOKEN" ]] && ! jq -e ".private" package.json >/dev/null; then
     if [ "$DRY_RUN" = true ] || [[ "$DRY_RUN" == "publish-only" ]]; then
       $PUBLISH_COMMAND --dry-run
     else
