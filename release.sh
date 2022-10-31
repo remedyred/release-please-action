@@ -20,6 +20,7 @@ PUBLISH_COMMAND="pnpm publish --ignore-scripts"
 # Configurations
 DRY_RUN=${DRY_RUN:-false}
 VERBOSE=${VERBOSE:-false}
+DEBUG=${DEBUG:-false}
 NO_BAIL=${NO_BAIL:-false}
 BAIL_ON_MISSING=${BAIL_ON_MISSING:-false}
 
@@ -50,15 +51,21 @@ runScript() {
       PNPM_RUN_COMMAND="$PNPM_RUN_COMMAND --no-bail"
     fi
 
-    if [ "$DRY_RUN" = true ]; then
-      echo "[DRY RUN] $PNPM_RUN_COMMAND $script_name"
+    PNPM_RUN_COMMAND="$PNPM_RUN_COMMAND $script_name"
+
+    if [[ "$DRY_RUN" == "true" ]]; then
+      echo "[DRY RUN] $PNPM_RUN_COMMAND"
     else
-      "$PNPM_RUN_COMMAND" "$script_name"
+      if [[ "$DEBUG" == "true" ]]; then
+        echo "RUN: $PNPM_RUN_COMMAND"
+      fi
+
+      $PNPM_RUN_COMMAND
     fi
   else
     echo "No script found for $script_name"
 
-    if [ "$BAIL_ON_MISSING" = true ]; then
+    if [[ "$BAIL_ON_MISSING" == "true" ]]; then
       exit 1
     fi
   fi
@@ -70,10 +77,14 @@ function publish() {
     runScript "$PUBLISH_SCRIPT"
   elif [[ -n "$NPM_TOKEN" ]] && ! jq -e ".private" package.json >/dev/null; then
     if [ "$DRY_RUN" = true ] || [[ "$DRY_RUN" == "publish-only" ]]; then
-      $PUBLISH_COMMAND --dry-run
-    else
-      $PUBLISH_COMMAND
+      PUBLISH_COMMAND="$PUBLISH_COMMAND --dry-run"
     fi
+
+    if [[ "$DEBUG" == "true" ]]; then
+      echo "RUN: $PUBLISH_COMMAND"
+    fi
+
+    $PUBLISH_COMMAND
   fi
 }
 
@@ -89,13 +100,24 @@ function install() {
     PNPM_INSTALL_COMMAND="$PNPM_INSTALL_COMMAND --silent"
   fi
 
+  if [[ "$DEBUG" == "true" ]]; then
+    echo "RUN: $PNPM_INSTALL_COMMAND"
+  fi
+
   $PNPM_INSTALL_COMMAND
 }
 
 if [[ -n "$NPM_TOKEN" ]]; then
   # Set NPM_TOKEN
   echo "Configuring NPM authentication"
-  npm config set "$NPM_REGISTRY" "$NPM_TOKEN"
+
+  NPM_CONFIG_COMMAND="npm config set $NPM_REGISTRY $NPM_TOKEN"
+
+  if [[ "$DEBUG" == "true" ]]; then
+    echo "RUN: $NPM_CONFIG_COMMAND"
+  fi
+
+  $NPM_CONFIG_COMMAND
 fi
 
 install

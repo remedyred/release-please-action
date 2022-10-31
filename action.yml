@@ -29,6 +29,9 @@ inputs:
     description: "Commands will be printed instead of executed. [true/false/publish-only] (default: false).
       If 'publish-only' is specified, all commands will run normally except for the 'publish' command, which will be run with the `--dry-run` flag."
     required: false
+  DEBUG:
+    description: "Prints debug information. [true/false] (default: false)"
+    required: false
 outputs:
   release_created:
     description: Whether a release was created
