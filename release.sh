@@ -24,7 +24,8 @@ DEBUG=${DEBUG:-false}
 NO_BAIL=${NO_BAIL:-false}
 BAIL_ON_MISSING=${BAIL_ON_MISSING:-false}
 
-AVAILABLE_SCRIPTS=$(npm run)
+AVAILABLE_SCRIPTS=$(npm run > /dev/null 2>&1 || true)
+
 # Check if npm script exists
 #:: has_script <script_name>
 has_script() {
