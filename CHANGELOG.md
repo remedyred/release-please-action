@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.2](https://github.com/remedyred/release-please-action/compare/v1.3.1...v1.3.2) (2022-10-31)
+
+
+### Bug Fixes
+
+* add explicit no auth message ([430a208](https://github.com/remedyred/release-please-action/commit/430a208a93a55eaa7c179a51daf3e21a5af4aedd))
+* don't throw on npm run at beginning ([e4c3d56](https://github.com/remedyred/release-please-action/commit/e4c3d565caedceaf4f546b1807fa57d9257c8ee6))
+
 ## [1.3.1](https://github.com/remedyred/release-please-action/compare/v1.3.0...v1.3.1) (2022-10-31)
 
 
