@@ -45,6 +45,13 @@ outputs:
 runs:
   using: composite
   steps:
+    - name: Checkout
+      if: ${{ inputs.CONFIG_ONLY != 'true' && steps.release.outputs.release_created }}
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        token: ${{ inputs.GITHUB_TOKEN }}
+
     - uses: pnpm/action-setup@v2.2.4
       with:
         version: 7
@@ -79,13 +86,6 @@ runs:
         release-type: node
         package-name: ${{ github.repository }}
         token: ${{ inputs.GITHUB_TOKEN || github.token }}
-
-    - name: Checkout
-      if: ${{ inputs.CONFIG_ONLY != 'true' && steps.release.outputs.release_created }}
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-        token: ${{ inputs.GITHUB_TOKEN }}
 
     - name: Run release script
       if: ${{ inputs.CONFIG_ONLY != 'true' && steps.release.outputs.release_created }}
