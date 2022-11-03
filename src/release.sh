@@ -13,7 +13,11 @@ PUBLISH_COMMAND="pnpm publish --ignore-scripts"
 function publish() {
   if [[ -n "$PUBLISH_SCRIPT" ]]; then
     runScript "$PUBLISH_SCRIPT"
-  elif [[ -n "$NPM_TOKEN" ]] && ! jq -e ".private" package.json >/dev/null; then
+  elif [[ -z "$NPM_TOKEN" ]]; then
+    echo "No NPM_TOKEN set, skipping publish"
+  elif jq -e ".private" package.json >/dev/null; then
+    echo "Skipping publish for private package"
+  else
     if [ "$DRY_RUN" = true ] || [[ "$DRY_RUN" == "publish-only" ]]; then
       PUBLISH_COMMAND="$PUBLISH_COMMAND --dry-run"
     fi
