@@ -33,9 +33,7 @@ fi
 #:: has_script <script_name>
 has_script() {
   local script_name="$1"
-  local SCRIPT_COUNT
-  SCRIPT_COUNT=$(echo "$AVAILABLE_SCRIPTS" | grep -c "^  $script_name")
-  [[ $SCRIPT_COUNT -gt 0 ]]
+  jq ".scripts | has(\"$script_name\")" package.json
 }
 export -f has_script
 
