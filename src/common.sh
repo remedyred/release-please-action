@@ -26,6 +26,9 @@ export BAIL_ON_MISSING=${BAIL_ON_MISSING:-false}
 AVAILABLE_SCRIPTS=$(npm run > /dev/null 2>&1 || true)
 export AVAILABLE_SCRIPTS
 
+if [[ "$DEBUG" == "true" ]]; then
+  echo -e "AVAILABLE_SCRIPTS:\n$AVAILABLE_SCRIPTS"
+fi
 
 # Check if npm script exists
 #:: has_script <script_name>
