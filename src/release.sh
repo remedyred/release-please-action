@@ -34,7 +34,7 @@ function install() {
     PNPM_INSTALL_COMMAND="$PNPM_INSTALL_COMMAND --frozen-lockfile"
   fi
 
-  if [[ "$VERBOSE" != "true" ]]; then
+  if [[ "$DEBUG" != "true" ]]; then
     PNPM_INSTALL_COMMAND="$PNPM_INSTALL_COMMAND --silent"
   fi
 

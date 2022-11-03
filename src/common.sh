@@ -18,7 +18,6 @@ export PRERELEASE_SCRIPTS_ARRAY
 
 # Configurations
 export DRY_RUN=${DRY_RUN:-false}
-export VERBOSE=${VERBOSE:-false}
 export DEBUG=${DEBUG:-false}
 export NO_BAIL=${NO_BAIL:-false}
 export BAIL_ON_MISSING=${BAIL_ON_MISSING:-false}
@@ -49,7 +48,7 @@ runScript() {
   if has_script "$script_name"; then
     echo "Running $script_name"
 
-    if [[ "$VERBOSE" != "true" ]]; then
+    if [[ "$DEBUG" != "true" ]]; then
       PNPM_RUN_COMMAND="$PNPM_RUN_COMMAND --silent"
     fi
 

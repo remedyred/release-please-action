@@ -16,9 +16,6 @@ inputs:
   PRERELEASE_SCRIPTS:
     description: "package.json scripts to run before release. (default: 'build,lint,test,docs')"
     required: false
-  VERBOSE:
-    description: "Verbose output [true/false] (default: false)"
-    required: false
   NO_BAIL:
     description: "Don't bail on prerelease script failures [true/false] (default: false)"
     required: false
@@ -69,7 +66,6 @@ runs:
         NPM_REGISTRY: ${{ inputs.NPM_REGISTRY }}
         PUBLISH_SCRIPT: ${{ inputs.PUBLISH_SCRIPT }}
         PRERELEASE_SCRIPTS: ${{ inputs.PRERELEASE_SCRIPTS }}
-        VERBOSE: ${{ inputs.VERBOSE }}
         NO_BAIL: ${{ inputs.NO_BAIL }}
         BAIL_ON_MISSING: ${{ inputs.BAIL_ON_MISSING }}
         DRY_RUN: ${{ inputs.DRY_RUN }}
@@ -95,7 +91,6 @@ runs:
         NPM_REGISTRY: ${{ inputs.NPM_REGISTRY }}
         PUBLISH_SCRIPT: ${{ inputs.PUBLISH_SCRIPT }}
         PRERELEASE_SCRIPTS: ${{ inputs.PRERELEASE_SCRIPTS }}
-        VERBOSE: ${{ inputs.VERBOSE }}
         NO_BAIL: ${{ inputs.NO_BAIL }}
         BAIL_ON_MISSING: ${{ inputs.BAIL_ON_MISSING }}
         DRY_RUN: ${{ inputs.DRY_RUN }}
