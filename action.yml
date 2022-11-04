@@ -48,16 +48,15 @@ runs:
         fetch-depth: 0
         token: ${{ inputs.GITHUB_TOKEN }}
 
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v2.2.4
-      with:
-        version: 7
+    - name: Install pnpm
+      shell: bash
+      run: npm i -g pnpm
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v3.5.1
+    - uses: actions/setup-node@v3
       with:
-        node-version: "lts/*"
-        cache: pnpm
+        node-version: ${{ matrix.node }}
+        cache: 'pnpm'
+        cache-dependency-path: '**/pnpm-lock.yaml'
 
     - name: Verify configuration
       env:
