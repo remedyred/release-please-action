@@ -52,11 +52,11 @@ runs:
       shell: bash
       run: npm i -g pnpm
 
-    - uses: actions/setup-node@v3.5.1
+    - name: Setup Node.js
+      uses: actions/setup-node@v3.5.1
       with:
-        node-version: ${{ matrix.node }}
-        cache: 'pnpm'
-        cache-dependency-path: '**/pnpm-lock.yaml'
+        node-version: "lts/*"
+        cache: pnpm
 
     - name: Verify configuration
       env:
