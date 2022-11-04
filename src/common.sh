@@ -77,7 +77,7 @@ debug () {
 export -f debug
 
 info() {
-  echo -e "\033[0;32m[INFO]\033[0m $1"
+  echo -e "\033[0;36m[INFO]\033[0m $1"
 }
 export -f info
 
