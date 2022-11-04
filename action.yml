@@ -52,12 +52,6 @@ runs:
       shell: bash
       run: npm i -g pnpm
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v3.5.1
-      with:
-        node-version: "lts/*"
-        cache: pnpm
-
     - name: Verify configuration
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN || github.token }}
@@ -81,6 +75,13 @@ runs:
         release-type: node
         package-name: ${{ github.repository }}
         token: ${{ inputs.GITHUB_TOKEN || github.token }}
+
+    - name: Setup Node.js
+      if: ${{ inputs.CONFIG_ONLY != 'true' && steps.release.outputs.release_created }}
+      uses: actions/setup-node@v3.5.1
+      with:
+        node-version: "lts/*"
+        cache: pnpm
 
     - name: Run release script
       if: ${{ inputs.CONFIG_ONLY != 'true' && steps.release.outputs.release_created }}
