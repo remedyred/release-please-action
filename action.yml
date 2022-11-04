@@ -32,8 +32,8 @@ inputs:
   CONFIG_ONLY:
     description: "Only verify configuration. [true/false] (default: false)"
     required: false
-  SKIP_PUBLISH:
-    description: "Skip publish command. [true/false] (default: false)"
+  PRERELEASE_ONLY:
+    description: "ONLY run prerelease scripts. [true/false] (default: false)"
     required: false
 outputs:
   release_created:
@@ -54,6 +54,7 @@ runs:
         version: 7
 
     - name: Verify configuration
+      if: ${{ inputs.PRERELEASE_ONLY != 'true' }}
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN || github.token }}
         NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
@@ -64,13 +65,13 @@ runs:
         BAIL_ON_MISSING: ${{ inputs.BAIL_ON_MISSING }}
         DRY_RUN: ${{ inputs.DRY_RUN }}
         DEBUG: ${{ inputs.DEBUG }}
-        SKIP_PUBLISH: ${{ inputs.SKIP_PUBLISH }}
+        PRERELEASE_ONLY: ${{ inputs.PRERELEASE_ONLY }}
         CONFIG_ONLY: "true"
       run: ${{ github.action_path }}/src/config.sh
       shell: bash
 
     - uses: google-github-actions/release-please-action@v3
-      if: ${{ inputs.CONFIG_ONLY != 'true' }}
+      if: ${{ inputs.CONFIG_ONLY != 'true' && inputs.PRERELEASE_ONLY != 'true' }}
       id: release
       with:
         release-type: node
@@ -85,7 +86,7 @@ runs:
         cache: pnpm
 
     - name: Run release script
-      if: ${{ inputs.CONFIG_ONLY != 'true' && steps.release.outputs.release_created }}
+      if: ${{ inputs.PRERELEASE_ONLY == 'true' || ( inputs.CONFIG_ONLY != 'true' && steps.release.outputs.release_created ) }}
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN || github.token }}
         NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
@@ -96,6 +97,6 @@ runs:
         BAIL_ON_MISSING: ${{ inputs.BAIL_ON_MISSING }}
         DRY_RUN: ${{ inputs.DRY_RUN }}
         DEBUG: ${{ inputs.DEBUG }}
-        SKIP_PUBLISH: ${{ inputs.SKIP_PUBLISH }}
+        PRERELEASE_ONLY: ${{ inputs.PRERELEASE_ONLY }}
       run: ${{ github.action_path }}/src/release.sh
       shell: bash

@@ -45,7 +45,7 @@ function install() {
 # shellcheck source=./verify.sh
 . "$SCRIPT_DIR"/verify.sh
 
-if [[ "$SKIP_PUBLISH" == "true" ]]; then
+if [[ "$PRERELEASE_ONLY" == "true" ]]; then
   success "Finished!"
   exit 0
 fi
