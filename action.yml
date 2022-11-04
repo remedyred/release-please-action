@@ -36,9 +36,9 @@ inputs:
     description: "ONLY run prerelease scripts. [true/false] (default: false)"
     required: false
 outputs:
-  release_created:
+  releases_created:
     description: Whether a release was created
-    value: ${{ steps.release.outputs.release_created }}
+    value: ${{ steps.release.outputs.releases_created }}
 runs:
   using: composite
   steps:
@@ -79,14 +79,14 @@ runs:
         token: ${{ inputs.GITHUB_TOKEN || github.token }}
 
     - name: Setup Node.js
-      if: ${{ inputs.CONFIG_ONLY != 'true' && steps.release.outputs.release_created }}
+      if: ${{ inputs.CONFIG_ONLY != 'true' && steps.release.outputs.releases_created }}
       uses: actions/setup-node@v3.5.1
       with:
         node-version: "lts/*"
         cache: pnpm
 
     - name: Run release script
-      if: ${{ inputs.PRERELEASE_ONLY == 'true' || ( inputs.CONFIG_ONLY != 'true' && steps.release.outputs.release_created ) }}
+      if: ${{ inputs.PRERELEASE_ONLY == 'true' || ( inputs.CONFIG_ONLY != 'true' && steps.release.outputs.releases_created ) }}
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN || github.token }}
         NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
