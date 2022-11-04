@@ -54,7 +54,7 @@ runs:
         version: 7
 
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v3.5.1
       with:
         node-version: "lts/*"
         cache: pnpm
