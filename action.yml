@@ -48,9 +48,10 @@ runs:
         fetch-depth: 0
         token: ${{ inputs.GITHUB_TOKEN }}
 
-    - name: Install pnpm
-      shell: bash
-      run: npm i -g pnpm
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v2.2.4
+      with:
+        version: 7
 
     - name: Verify configuration
       env:
