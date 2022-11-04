@@ -9,7 +9,7 @@ if [[ -n "$NPM_TOKEN" ]]; then
   # Set NPM_TOKEN
   info "Configuring NPM authentication"
 
-  NPM_CONFIG_REGISTRY_COMMAND="npm config set registry $NPM_REGISTRY"
+  NPM_CONFIG_REGISTRY_COMMAND="npm config set registry https:$NPM_REGISTRY"
   debug "RUN: $NPM_CONFIG_REGISTRY_COMMAND"
   $NPM_CONFIG_REGISTRY_COMMAND || {
     error "Failed to set NPM registry"
