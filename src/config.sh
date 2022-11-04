@@ -7,25 +7,23 @@ SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 
 if [[ -n "$NPM_TOKEN" ]]; then
   # Set NPM_TOKEN
-  echo "Configuring NPM authentication"
+  info "Configuring NPM authentication"
 
   NPM_CONFIG_COMMAND="npm config set $NPM_REGISTRY $NPM_TOKEN"
 
-  if [[ "$DEBUG" == "true" ]]; then
-    echo "RUN: $NPM_CONFIG_COMMAND"
-  fi
-
+  debug "RUN: $NPM_CONFIG_COMMAND"
   $NPM_CONFIG_COMMAND
 
+  debug "RUN: npm whoami"
   if ! npm whoami >/dev/null; then
-    echo "NPM authentication failed"
+    error "NPM authentication failed"
     exit 1
   fi
 else
-  echo "No NPM_TOKEN provided, skipping NPM authentication"
+  warn "No NPM_TOKEN provided, skipping NPM authentication"
 fi
 
 if [[ "$CONFIG_ONLY" == "true" ]]; then
-  echo "NPM configuration verified"
+  success "NPM configuration verified"
   exit 0
 fi

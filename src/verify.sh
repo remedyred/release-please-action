@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 
 # shellcheck source=./common.sh

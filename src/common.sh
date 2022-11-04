@@ -1,6 +1,7 @@
 #!/bin/bash
 
 __LOADED=1
+export __LOADED
 
 # Auth
 export NPM_TOKEN=${NPM_TOKEN:-}
@@ -21,13 +22,8 @@ export DRY_RUN=${DRY_RUN:-false}
 export DEBUG=${DEBUG:-false}
 export NO_BAIL=${NO_BAIL:-false}
 export BAIL_ON_MISSING=${BAIL_ON_MISSING:-false}
-
 AVAILABLE_SCRIPTS=$(npm run > /dev/null 2>&1 || true)
 export AVAILABLE_SCRIPTS
-
-if [[ "$DEBUG" == "true" ]]; then
-  echo -e "AVAILABLE_SCRIPTS:\n$AVAILABLE_SCRIPTS"
-fi
 
 # Check if npm script exists
 #:: has_script <script_name>
@@ -44,7 +40,7 @@ runScript() {
   local PNPM_RUN_COMMAND="pnpm run --if-present"
 
   if has_script "$script_name"; then
-    echo "Running $script_name"
+    debug "Running $script_name"
 
     if [[ "$DEBUG" != "true" ]]; then
       PNPM_RUN_COMMAND="$PNPM_RUN_COMMAND --silent"
@@ -57,20 +53,58 @@ runScript() {
     PNPM_RUN_COMMAND="$PNPM_RUN_COMMAND $script_name"
 
     if [[ "$DRY_RUN" == "true" ]]; then
-      echo "[DRY RUN] $PNPM_RUN_COMMAND"
+      info "[DRY RUN] $PNPM_RUN_COMMAND"
     else
-      if [[ "$DEBUG" == "true" ]]; then
-        echo "RUN: $PNPM_RUN_COMMAND"
-      fi
-
+      debug "RUN: $PNPM_RUN_COMMAND"
       $PNPM_RUN_COMMAND
     fi
   else
-    echo "No script found for $script_name"
-
     if [[ "$BAIL_ON_MISSING" == "true" ]]; then
+      error "No script found for $script_name"
       exit 1
+    else
+      warn "No script found for $script_name"
     fi
   fi
 }
 export -f runScript
+
+debug () {
+  if [[ "$DEBUG" == "true" ]]; then
+    echo -e "\033[0;33m[DEBUG]\033[0m $1"
+  fi
+}
+export -f debug
+
+info() {
+  echo -e "\033[0;32m[INFO]\033[0m $1"
+}
+export -f info
+
+warn() {
+  echo -e "\033[0;33m[WARN]\033[0m $1"
+}
+export -f warn
+
+error() {
+  echo -e "\033[0;31m[ERROR]\033[0m $1"
+}
+export -f error
+
+success () {
+  echo -e "\033[0;32m[SUCCESS]\033[0m $1"
+}
+export -f success
+
+log () {
+  echo -e "\033[0;37m[LOG]\033[0m $1"
+}
+export -f log
+
+debug "DRY_RUN: $DRY_RUN"
+debug "DEBUG: $DEBUG"
+debug "NO_BAIL: $NO_BAIL"
+debug "BAIL_ON_MISSING: $BAIL_ON_MISSING"
+debug "PUBLISH_SCRIPT: $PUBLISH_SCRIPT"
+debug "PRERELEASE_SCRIPTS: $PRERELEASE_SCRIPTS"
+debug "AVAILABLE_SCRIPTS:\n$AVAILABLE_SCRIPTS"
