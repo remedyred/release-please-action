@@ -52,7 +52,7 @@ runs:
       shell: bash
       run: npm i -g pnpm
 
-    - uses: actions/setup-node@v3
+    - uses: actions/setup-node@v3.5.1
       with:
         node-version: ${{ matrix.node }}
         cache: 'pnpm'
