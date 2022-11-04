@@ -9,10 +9,19 @@ if [[ -n "$NPM_TOKEN" ]]; then
   # Set NPM_TOKEN
   info "Configuring NPM authentication"
 
-  NPM_CONFIG_COMMAND="npm config set $NPM_REGISTRY $NPM_TOKEN"
+  NPM_CONFIG_REGISTRY_COMMAND="npm config set registry $NPM_REGISTRY"
+  debug "RUN: $NPM_CONFIG_REGISTRY_COMMAND"
+  $NPM_CONFIG_REGISTRY_COMMAND || {
+    error "Failed to set NPM registry"
+    exit 1
+  }
 
-  debug "RUN: $NPM_CONFIG_COMMAND"
-  $NPM_CONFIG_COMMAND
+  NPM_CONFIG_TOKEN_COMMAND="npm config set $NPM_REGISTRY:_authToken $NPM_TOKEN"
+  debug "RUN: $NPM_CONFIG_TOKEN_COMMAND"
+  $NPM_CONFIG_TOKEN_COMMAND || {
+    error "Failed to set NPM token"
+    exit 1
+  }
 
   debug "RUN: npm whoami"
   if ! npm whoami >/dev/null; then
