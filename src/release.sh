@@ -59,7 +59,7 @@ REBUILD=0
 BASE_PATH=$(pwd)
 [[ -f "turbo.json" ]] || REBUILD=1
 
-echo "$RELEASES" | jq -c '.[]' | while read -r package_dir; do
+echo "$RELEASES" | jq -r '.[]' | while read -r package_dir; do
   if [[ "$package_dir" == "." ]]; then
     cd "$BASE_PATH" || die "Could not cd into repo root"
   else
