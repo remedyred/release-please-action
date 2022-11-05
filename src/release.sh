@@ -9,6 +9,12 @@ RELEASES=${2:-}
 # shellcheck source=./common.sh
 ((__LOADED)) || . "$SCRIPT_DIR"/common.sh
 
+# Double check that we don't run this script during prerelease only, or config only workflows
+if [[ "$PRERELEASE_ONLY" == "true" ]] || [[ "$CONFIG_ONLY" == "true" ]]; then
+  success "Finished!"
+  exit 0
+fi
+
 # Run the publish script
 function publish() {
   local PUBLISH_COMMAND="pnpm publish --ignore-scripts"
@@ -44,7 +50,9 @@ echo "$RELEASES" | jq -r '.[]' | while read -r package_dir; do
     runScript "build"
   fi
 
+  debug "Publishing $package_dir"
   publish
+  success "Published $package_dir"
 done
 
 success "Finished!"
