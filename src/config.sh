@@ -25,4 +25,28 @@ else
 fi
 
 success "NPM configuration verified"
+
+info "Installing dependencies"
+PNPM_INSTALL_COMMAND="pnpm install"
+
+if [[ -f "pnpm-lock.yaml" ]]; then
+  PNPM_INSTALL_COMMAND="$PNPM_INSTALL_COMMAND --frozen-lockfile"
+fi
+
+if [[ "$DEBUG" != "true" ]]; then
+  PNPM_INSTALL_COMMAND="$PNPM_INSTALL_COMMAND --silent"
+fi
+
+debug "RUN: $PNPM_INSTALL_COMMAND"
+$PNPM_INSTALL_COMMAND
+
+if [[ "$CONFIG_ONLY" == "true" ]]; then
+  success "Finished!"
+  exit 0
+fi
+
+for script in "${PRERELEASE_SCRIPTS_ARRAY[@]}"; do
+  runScript "$script"
+done
+
 exit 0

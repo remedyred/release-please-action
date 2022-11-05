@@ -56,7 +56,7 @@ runs:
       with:
         version: 7
 
-    - name: Verify configuration
+    - name: Verify configuration & run prerelease scripts
       if: ${{ inputs.PRERELEASE_ONLY != 'true' }}
       run: ${{ github.action_path }}/src/config.sh '${{ toJSON(inputs) }}'
       shell: bash
@@ -78,6 +78,6 @@ runs:
         cache: pnpm
 
     - name: Run release script
-      if: ${{ inputs.PRERELEASE_ONLY == 'true' || ( inputs.CONFIG_ONLY != 'true' && steps.release.outputs.releases_created ) }}
+      if: ${{ inputs.PRERELEASE_ONLY != 'true' && inputs.CONFIG_ONLY != 'true' && steps.release.outputs.releases_created }}
       run: ${{ github.action_path }}/src/release.sh '${{ toJSON(inputs) }}' '${{ steps.release.outputs.paths_released }}'
       shell: bash
