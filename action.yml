@@ -55,19 +55,7 @@ runs:
 
     - name: Verify configuration
       if: ${{ inputs.PRERELEASE_ONLY != 'true' }}
-      env:
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN || github.token }}
-        NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
-        NPM_REGISTRY: ${{ inputs.NPM_REGISTRY }}
-        PUBLISH_SCRIPT: ${{ inputs.PUBLISH_SCRIPT }}
-        PRERELEASE_SCRIPTS: ${{ inputs.PRERELEASE_SCRIPTS }}
-        NO_BAIL: ${{ inputs.NO_BAIL }}
-        BAIL_ON_MISSING: ${{ inputs.BAIL_ON_MISSING }}
-        DRY_RUN: ${{ inputs.DRY_RUN }}
-        DEBUG: ${{ inputs.DEBUG }}
-        PRERELEASE_ONLY: ${{ inputs.PRERELEASE_ONLY }}
-        CONFIG_ONLY: "true"
-      run: ${{ github.action_path }}/src/config.sh
+      run: ${{ github.action_path }}/src/config.sh '${{ toJSON(inputs) }}'
       shell: bash
 
     - uses: google-github-actions/release-please-action@v3
@@ -87,16 +75,5 @@ runs:
 
     - name: Run release script
       if: ${{ inputs.PRERELEASE_ONLY == 'true' || ( inputs.CONFIG_ONLY != 'true' && steps.release.outputs.releases_created ) }}
-      env:
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN || github.token }}
-        NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
-        NPM_REGISTRY: ${{ inputs.NPM_REGISTRY }}
-        PUBLISH_SCRIPT: ${{ inputs.PUBLISH_SCRIPT }}
-        PRERELEASE_SCRIPTS: ${{ inputs.PRERELEASE_SCRIPTS }}
-        NO_BAIL: ${{ inputs.NO_BAIL }}
-        BAIL_ON_MISSING: ${{ inputs.BAIL_ON_MISSING }}
-        DRY_RUN: ${{ inputs.DRY_RUN }}
-        DEBUG: ${{ inputs.DEBUG }}
-        PRERELEASE_ONLY: ${{ inputs.PRERELEASE_ONLY }}
-      run: ${{ github.action_path }}/src/release.sh
+      run: ${{ github.action_path }}/src/release.sh '${{ toJSON(inputs) }}' '${{ steps.release.outputs.paths_released }}'
       shell: bash

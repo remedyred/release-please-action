@@ -3,6 +3,8 @@
 set -e
 
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+INPUTS=${1:-}
+RELEASES=${2:-}
 
 # shellcheck source=./common.sh
 ((__LOADED)) || . "$SCRIPT_DIR"/common.sh
@@ -50,4 +52,20 @@ if [[ "$PRERELEASE_ONLY" == "true" ]]; then
   exit 0
 fi
 
-publish
+REBUILD=0
+BASE_PATH=$(pwd)
+[[ -f "turbo.json" ]] || REBUILD=1
+
+echo "$RELEASES" | jq -c '.[]' | while read -r package_dir; do
+  cd "$BASE_PATH/$package_dir" || die "Could not cd into $package_dir"
+
+  if ((REBUILD)) && [[ "$package_dir" != "." ]]; then
+    debug "Checking for build script in $package_dir"
+    runScript "build"
+  fi
+
+  publish
+done
+
+success "Finished!"
+exit 0

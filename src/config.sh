@@ -1,6 +1,7 @@
 #!/bin/bash
 
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+INPUTS=${1:-}
 
 # shellcheck source=./common.sh
 ((__LOADED)) || . "$SCRIPT_DIR"/common.sh
