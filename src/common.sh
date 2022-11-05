@@ -35,8 +35,7 @@ runScript() {
     fi
   else
     if [[ "$BAIL_ON_MISSING" == "true" ]]; then
-      error "No script found for $script_name"
-      exit 1
+      die "No script found for $script_name"
     else
       warn "No script found for $script_name"
     fi

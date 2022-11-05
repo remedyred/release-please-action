@@ -44,8 +44,11 @@ function install() {
   $PNPM_INSTALL_COMMAND
 }
 
-# shellcheck source=./verify.sh
-. "$SCRIPT_DIR"/verify.sh
+install
+
+for script in "${PRERELEASE_SCRIPTS_ARRAY[@]}"; do
+  runScript "$script"
+done
 
 if [[ "$PRERELEASE_ONLY" == "true" ]]; then
   success "Finished!"
