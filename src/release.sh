@@ -60,7 +60,11 @@ BASE_PATH=$(pwd)
 [[ -f "turbo.json" ]] || REBUILD=1
 
 echo "$RELEASES" | jq -c '.[]' | while read -r package_dir; do
-  cd "$BASE_PATH/$package_dir" || die "Could not cd into $package_dir"
+  if [[ "$package_dir" == "." ]]; then
+    cd "$BASE_PATH" || die "Could not cd into repo root"
+  else
+    cd "$BASE_PATH/$package_dir" || die "Could not cd into $package_dir"
+  fi
 
   if ((REBUILD)) && [[ "$package_dir" != "." ]]; then
     debug "Checking for build script in $package_dir"
