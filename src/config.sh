@@ -27,18 +27,24 @@ fi
 success "NPM configuration verified"
 
 info "Installing dependencies"
-PNPM_INSTALL_COMMAND="pnpm install"
-
-if [[ -f "pnpm-lock.yaml" ]]; then
-  PNPM_INSTALL_COMMAND="$PNPM_INSTALL_COMMAND --frozen-lockfile"
-fi
-
-if [[ "$DEBUG" != "true" ]]; then
-  PNPM_INSTALL_COMMAND="$PNPM_INSTALL_COMMAND --silent"
-fi
+PNPM_INSTALL_COMMAND="pnpm install --loglevel error"
 
 debug "RUN: $PNPM_INSTALL_COMMAND"
-$PNPM_INSTALL_COMMAND
+PNPM_ERROR=$(pnpm i --frozen-lockfile --loglevel error 2>&1)
+PNPM_EXIT_CODE=$?
+if ((PNPM_EXIT_CODE)); then
+  if [[ "$PNPM_ERROR" =~ "ERR_PNPM_OUTDATED_LOCKFILE" ]] && [[ "$AUTOFIX_LOCKFILE" == "true" ]] && [[ "$CONFIG_ONLY" != "true" ]] && [[ "$PRERELEASE_ONLY" != "true" ]]; then
+    debug "RUN: $PNPM_INSTALL_COMMAND --fix-lockfile"
+    $PNPM_INSTALL_COMMAND --fix-lockfile
+    git add pnpm-lock.yaml
+    git commit -m "chore: update lockfile" -m "[skip ci]"
+    git push
+  else
+    die "Failed to install dependencies. $PNPM_ERROR"
+  fi
+else
+  success "Dependencies installed"
+fi
 
 if [[ "$CONFIG_ONLY" == "true" ]]; then
   success "Finished!"

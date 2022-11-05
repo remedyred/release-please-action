@@ -38,6 +38,9 @@ inputs:
   MONOREPO:
     description: "Monorepo mode. [true/false] (default: false)"
     required: false
+  AUTOFIX_LOCKFILE:
+    description: "Autofix lockfile. [true/false] (default: true)"
+    required: false
 outputs:
   releases_created:
     description: Whether a release was created

@@ -98,6 +98,7 @@ if ((__LOADED == 0)); then
   DRY_RUN=$(echo "$INPUTS" | jq -r '.DRY_RUN')
   DEBUG=$(echo "$INPUTS" | jq -r '.DEBUG')
   PRERELEASE_ONLY=$(echo "$INPUTS" | jq -r '.PRERELEASE_ONLY')
+  AUTOFIX_LOCKFILE=$(echo "$INPUTS" | jq -r '.AUTOFIX_LOCKFILE')
 
   # Process Vars
 
@@ -114,11 +115,13 @@ if ((__LOADED == 0)); then
   [[ -z "$DEBUG" ]] && DEBUG=false
   [[ -z "$NO_BAIL" ]] && NO_BAIL=false
   [[ -z "$BAIL_ON_MISSING" ]] && BAIL_ON_MISSING=false
+  [[ -z "$AUTOFIX_LOCKFILE" ]] && AUTOFIX_LOCKFILE=true
 
   debug "DRY_RUN: $DRY_RUN"
   debug "DEBUG: $DEBUG"
   debug "NO_BAIL: $NO_BAIL"
   debug "BAIL_ON_MISSING: $BAIL_ON_MISSING"
+  debug "AUTOFIX_LOCKFILE: $AUTOFIX_LOCKFILE"
   debug "PUBLISH_SCRIPT: $PUBLISH_SCRIPT"
   debug "PRERELEASE_SCRIPTS: $PRERELEASE_SCRIPTS"
   debug "AVAILABLE_SCRIPTS:\n$AVAILABLE_SCRIPTS"
