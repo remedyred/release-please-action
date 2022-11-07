@@ -59,4 +59,12 @@ for script in "${PRERELEASE_SCRIPTS_ARRAY[@]}"; do
   runScript "$script"
 done
 
+if [[ "$PRERELEASE_ONLY" != "true" ]]; then
+  echo "should-release=true" >>"$GITHUB_OUTPUT"
+
+  if [[ -n "$RELEASE_COMMAND" ]]; then
+    echo "release-command=$RELEASE_COMMAND" >>"$GITHUB_OUTPUT"
+  fi
+fi
+
 exit 0

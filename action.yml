@@ -41,6 +41,9 @@ inputs:
   AUTOFIX_LOCKFILE:
     description: "Autofix lockfile. [true/false] (default: true)"
     required: false
+  RELEASE_COMMAND:
+    description: "Release Please Command. Single repos default to both, monorepos default to manifest. [github-release/release-pr/manifest/manifest-pr]"
+    required: false
 outputs:
   releases_created:
     description: Whether a release was created

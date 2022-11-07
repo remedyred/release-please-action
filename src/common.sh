@@ -99,6 +99,8 @@ if ((__LOADED == 0)); then
   DEBUG=$(echo "$INPUTS" | jq -r '.DEBUG')
   PRERELEASE_ONLY=$(echo "$INPUTS" | jq -r '.PRERELEASE_ONLY')
   AUTOFIX_LOCKFILE=$(echo "$INPUTS" | jq -r '.AUTOFIX_LOCKFILE')
+  MONOREPO=$(echo "$INPUTS" | jq -r '.MONOREPO')
+  RELEASE_COMMAND=$(echo "$INPUTS" | jq -r '.RELEASE_COMMAND')
 
   # Process Vars
 
@@ -116,6 +118,11 @@ if ((__LOADED == 0)); then
   [[ -z "$NO_BAIL" ]] && NO_BAIL=false
   [[ -z "$BAIL_ON_MISSING" ]] && BAIL_ON_MISSING=false
   [[ -z "$AUTOFIX_LOCKFILE" ]] && AUTOFIX_LOCKFILE=true
+  [[ -z "$MONOREPO" ]] && MONOREPO=false
+
+  if [[ -z "$RELEASE_COMMAND" ]] && [[ "$MONOREPO" == "true" ]]; then
+    RELEASE_COMMAND="manifest"
+  fi
 
   debug "DRY_RUN: $DRY_RUN"
   debug "DEBUG: $DEBUG"
