@@ -64,26 +64,27 @@ runs:
 
     - name: Verify configuration & run prerelease scripts
       if: ${{ inputs.PRERELEASE_ONLY != 'true' }}
+      id: prerelease
       run: ${{ github.action_path }}/src/config.sh '${{ toJSON(inputs) }}'
       shell: bash
 
     - uses: google-github-actions/release-please-action@v3
-      if: ${{ inputs.CONFIG_ONLY != 'true' && inputs.PRERELEASE_ONLY != 'true' }}
+      if: ${{ steps.prerelease.outputs.should-release == 'true' }}
       id: release
       with:
-        release-type: node
         package-name: ${{ github.repository }}
         token: ${{ inputs.GITHUB_TOKEN || github.token }}
         monorepo-tags: ${{ inputs.MONOREPO == 'true' }}
+        command: ${{ steps.prerelease.outputs.release-command }}
 
     - name: Setup Node.js
-      if: ${{ inputs.CONFIG_ONLY != 'true' && steps.release.outputs.releases_created }}
+      if: ${{ steps.prerelease.outputs.should-release == 'true' && steps.release.outputs.releases_created }}
       uses: actions/setup-node@v3.5.1
       with:
         node-version: "lts/*"
         cache: pnpm
 
     - name: Run release script
-      if: ${{ inputs.PRERELEASE_ONLY != 'true' && inputs.CONFIG_ONLY != 'true' && steps.release.outputs.releases_created }}
+      if: ${{ steps.prerelease.outputs.should-release == 'true' && steps.release.outputs.releases_created }}
       run: ${{ github.action_path }}/src/release.sh '${{ toJSON(inputs) }}' '${{ steps.release.outputs.paths_released }}'
       shell: bash
