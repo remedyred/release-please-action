@@ -76,6 +76,10 @@ runs:
         token: ${{ inputs.GITHUB_TOKEN || github.token }}
         monorepo-tags: ${{ inputs.MONOREPO == 'true' }}
         command: ${{ steps.prerelease.outputs.release-command }}
+        separate-pull-requests: true
+        always-link-local: false
+        plugins:
+          - node-workspace
 
     - name: Setup Node.js
       if: ${{ steps.prerelease.outputs.should-release == 'true' && steps.release.outputs.releases_created }}
