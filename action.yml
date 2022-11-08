@@ -78,8 +78,7 @@ runs:
         command: ${{ steps.prerelease.outputs.release-command }}
         separate-pull-requests: true
         always-link-local: false
-        plugins:
-          - node-workspace
+        plugins: node-workspace
 
     - name: Setup Node.js
       if: ${{ steps.prerelease.outputs.should-release == 'true' && steps.release.outputs.releases_created }}
