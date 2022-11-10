@@ -32,6 +32,8 @@ else
   warn "No NPM_TOKEN provided, skipping NPM authentication"
 fi
 
+pnpm i -g release-please >/dev/null || die "Failed to install release-please"
+
 success "NPM configuration verified"
 
 info "Installing dependencies"
