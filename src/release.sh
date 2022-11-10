@@ -4,7 +4,8 @@ set -e
 
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 INPUTS=${1:-}
-RELEASES=${2:-}
+GITHUB_REPOSITORY=${2:-}
+RELEASES=${3:-}
 
 # shellcheck source=./common.sh
 ((__LOADED)) || . "$SCRIPT_DIR"/common.sh
@@ -33,6 +34,29 @@ function publish() {
     $PUBLISH_COMMAND
   fi
 }
+
+# Run release-please
+RELEASE_PLEASE_BASE_PARAMS=()
+RELEASE_PLEASE_BASE_PARAMS+=("--token=$GITHUB_TOKEN")
+RELEASE_PLEASE_BASE_PARAMS+=("--repo-url=$GITHUB_REPOSITORY")
+[[ "$DRY_RUN" == "true" ]] || [[ "$DRY_RUN" == "publish-only" ]] && RELEASE_PLEASE_BASE_PARAMS+=("--dry-run")
+[[ "$DEBUG" == "true" ]] && RELEASE_PLEASE_BASE_PARAMS+=("--debug")
+
+for PACKAGE in $PACKAGES; do
+  packageName=$(jq -r ".name" "$PACKAGE"/package.json)
+
+  RELEASE_PLEASE_PARAMS=("${RELEASE_PLEASE_BASE_PARAMS[@]}")
+  RELEASE_PLEASE_PARAMS+=("--path=$PACKAGE")
+  RELEASE_PLEASE_PARAMS+=("--package-name=$packageName")
+  RELEASE_PLEASE_PARAMS+=(--monorepo-tags)
+  RELEASE_PLEASE_PARAMS+=(--pull-request-title-pattern="chore: release $packageName \${version}")
+
+  debug "RUN: release-please github-release ${RELEASE_PLEASE_PARAMS[*]}"
+  release-please github-release "${RELEASE_PLEASE_PARAMS[@]}" || die "release-please failed to create a GitHub release"
+
+  debug "RUN: release-please release-pr ${RELEASE_PLEASE_PARAMS[*]}"
+  release-please release-pr "${RELEASE_PLEASE_PARAMS[@]}" || die "release-please failed to create a release PR"
+done
 
 REBUILD=0
 BASE_PATH=$(pwd)

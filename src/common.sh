@@ -8,6 +8,9 @@ has_script() {
 }
 export -f has_script
 
+PACKAGES=$(pnpm m ls --json --depth=-1 --filter=\!root | jq -r '.[]')
+export PACKAGES
+
 # Run npm script
 #:: run_script <script_name>
 runScript() {
