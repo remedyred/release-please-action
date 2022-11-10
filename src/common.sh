@@ -120,10 +120,6 @@ if ((__LOADED == 0)); then
   [[ -z "$AUTOFIX_LOCKFILE" ]] && AUTOFIX_LOCKFILE=true
   [[ -z "$MONOREPO" ]] && MONOREPO=false
 
-  if [[ -z "$RELEASE_COMMAND" ]] && [[ "$MONOREPO" == "true" ]]; then
-    RELEASE_COMMAND="manifest"
-  fi
-
   debug "DRY_RUN: $DRY_RUN"
   debug "DEBUG: $DEBUG"
   debug "NO_BAIL: $NO_BAIL"
