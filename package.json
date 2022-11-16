@@ -4,28 +4,58 @@
 	"private": true,
 	"license": "MIT",
 	"scripts": {
-		"lint": "eslint .",
-		"lint:fix": "eslint \"**/*.{json,yml,yaml}\" --fix"
+		"build": "indexer && tsup --minify",
+		"build:dev": "indexer && tsup",
+		"clean": "shx rm -rf dist",
+		"depcheck": "depcheck",
+		"dev": "indexer && tsup --watch",
+		"index": "indexer",
+		"lint": "tsc --noEmit && eslint \"**/*.{ts,json,yml,yaml}\" --cache --color",
+		"lint:fix": "pnpm run lint --fix",
+		"start": "nodemon",
+		"types": "tsc --project ./tsconfig.types.json"
 	},
 	"release": {
 		"extends": [
 			"@snickbit/semantic-release"
 		]
 	},
+	"dependencies": {
+		"@actions/core": "1.10.0",
+		"@actions/glob": "^0.3.0",
+		"@snickbit/node-utilities": "4.4.16",
+		"@snickbit/out": "2.0.48",
+		"@snickbit/utilities": "3.4.15",
+		"execa": "^6.1.0",
+		"fast-glob": "3.2.12",
+		"release-please": "14.16.0"
+	},
 	"devDependencies": {
 		"@snickbit/eslint-config": "1.4.0",
+		"@snickbit/indexer": "2.5.28",
 		"@snickbit/semantic-release": "1.6.2",
-		"@types/node": "^18.11.9",
-		"eslint": "8.26.0",
-		"semantic-release": "^19.0.5",
-		"tsup": "^6.4.0",
-		"typescript": "^4.8.4"
+		"@types/node": "18.11.9",
+		"concurrently": "7.5.0",
+		"eslint": "8.27.0",
+		"nodemon": "2.0.20",
+		"semantic-release": "19.0.5",
+		"shx": "0.3.4",
+		"ts-node": "^10.9.1",
+		"tsup": "6.4.0",
+		"typescript": "4.8.4"
 	},
-	"dependencies": {
-		"@snickbit/node-cli": "^3.0.24",
-		"@snickbit/node-utilities": "^4.4.16",
-		"@snickbit/out": "^2.0.48",
-		"@snickbit/utilities": "^3.4.15",
-		"release-please": "^14.16.0"
+	"engines": {
+		"node": ">= 14"
+	},
+	"tsup": {
+		"entry": [
+			"src/index.ts"
+		],
+		"clean": true,
+		"dts": false,
+		"format": [
+			"cjs"
+		],
+		"onSuccess": "pnpm run types"
 	}
 }
