@@ -7,7 +7,7 @@ INPUTS=${1:-}
 RELEASES=${2:-}
 
 # shellcheck source=./common.sh
-[[ ! -v __LOADED ]] || . "$SCRIPT_DIR"/common.sh
+[[ -v __LOADED ]] || . "$SCRIPT_DIR"/common.sh
 
 # Double check that we don't run this script during prerelease only, or config only workflows
 if [[ "$PRERELEASE_ONLY" == "true" ]] || [[ "$CONFIG_ONLY" == "true" ]]; then

@@ -4,7 +4,7 @@ SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 INPUTS=${1:-}
 
 # shellcheck source=./common.sh
-[[ ! -v __LOADED ]] || . "$SCRIPT_DIR"/common.sh
+[[ -v __LOADED ]] || . "$SCRIPT_DIR"/common.sh
 
 # Set GitHub Actions as the user
 git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
