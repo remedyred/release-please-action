@@ -43,6 +43,10 @@ runScript() {
 }
 export -f runScript
 
+function detectMonorepo() {
+  [[ -f "pnpm-workspace.yaml" ]]
+}
+
 debug() {
   if [[ "$DEBUG" == "true" ]]; then
     echo -e "\033[0;33m[DEBUG]\033[0m $1"
@@ -118,7 +122,7 @@ if ((__LOADED == 0)); then
   [[ -z "$NO_BAIL" ]] && NO_BAIL=false
   [[ -z "$BAIL_ON_MISSING" ]] && BAIL_ON_MISSING=false
   [[ -z "$AUTOFIX_LOCKFILE" ]] && AUTOFIX_LOCKFILE=true
-  [[ -z "$MONOREPO" ]] && MONOREPO=false
+  [[ -z "$MONOREPO" ]] && MONOREPO=$(detectMonorepo)
 
   if [[ -z "$RELEASE_COMMAND" ]] && [[ "$MONOREPO" == "true" ]]; then
     RELEASE_COMMAND="manifest"
