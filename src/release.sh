@@ -1,13 +1,15 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
-SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 INPUTS=${1:-}
 RELEASES=${2:-}
 
 # shellcheck source=./common.sh
-[[ -v __LOADED ]] || . "$SCRIPT_DIR"/common.sh
+. "$(dirname "${BASH_SOURCE[0]}")/common.sh" || {
+  echo "Failed to load common.sh"
+  exit 1
+}
 
 # Double check that we don't run this script during prerelease only, or config only workflows
 if [[ "$PRERELEASE_ONLY" == "true" ]] || [[ "$CONFIG_ONLY" == "true" ]]; then
