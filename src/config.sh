@@ -1,10 +1,14 @@
 #!/bin/bash
 
-SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+set -euo pipefail
+
 INPUTS=${1:-}
 
-# shellcheck source=./common.sh
-[[ -v __LOADED ]] || . "$SCRIPT_DIR"/common.sh
+# shellcheck source=./lib/common.sh
+. "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh" || {
+  echo "Failed to load common.sh"
+  exit 1
+}
 
 # Set GitHub Actions as the user
 git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

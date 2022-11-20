@@ -1,12 +1,16 @@
 #!/bin/bash
 
-SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+set -euo pipefail
+
 INPUTS=${1:-}
 GITHUB_REPOSITORY=${2:-}
 RELEASES=${3:-}
 
-# shellcheck source=./common.sh
-[[ -v __LOADED ]] || . "$SCRIPT_DIR"/common.sh
+# shellcheck source=./lib/common.sh
+. "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh" || {
+  echo "Failed to load common.sh"
+  exit 1
+}
 
 # Double check that we don't run this script during prerelease only, or config only workflows
 if [[ "$PRERELEASE_ONLY" == "true" ]] || [[ "$CONFIG_ONLY" == "true" ]]; then
