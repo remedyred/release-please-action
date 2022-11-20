@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#set -euxo pipefail # debug mode
+set -e
+
 # Check if npm script exists
 #:: has_script <script_name>
 has_script() {
@@ -8,7 +11,7 @@ has_script() {
 }
 export -f has_script
 
-PACKAGES=$(pnpm m ls --json --depth=-1 --filter=\!root | jq -r '.[]')
+PACKAGES="$(pnpm ls -r --depth -1 --parseable)"
 export PACKAGES
 
 # Run npm script
@@ -45,10 +48,6 @@ runScript() {
   fi
 }
 export -f runScript
-
-function detectMonorepo() {
-  [[ -f "pnpm-workspace.yaml" ]]
-}
 
 debug() {
   if [[ "$DEBUG" == "true" ]]; then
@@ -125,7 +124,13 @@ if ((__LOADED == 0)); then
   [[ -z "$NO_BAIL" ]] && NO_BAIL=false
   [[ -z "$BAIL_ON_MISSING" ]] && BAIL_ON_MISSING=false
   [[ -z "$AUTOFIX_LOCKFILE" ]] && AUTOFIX_LOCKFILE=true
-  [[ -z "$MONOREPO" ]] && MONOREPO=$(detectMonorepo)
+  [[ -z "$PRERELEASE_ONLY" ]] && PRERELEASE_ONLY=false
+
+  if [[ -z "$MONOREPO" ]] && [[ ${#PACKAGES[@]} -gt 1 ]]; then
+    MONOREPO=true
+  else
+    MONOREPO=false
+  fi
 
   if [[ -z "$RELEASE_COMMAND" ]] && [[ "$MONOREPO" == "true" ]]; then
     RELEASE_COMMAND="manifest"
@@ -134,9 +139,12 @@ if ((__LOADED == 0)); then
   debug "DRY_RUN: $DRY_RUN"
   debug "DEBUG: $DEBUG"
   debug "NO_BAIL: $NO_BAIL"
+  debug "PRERELEASE_ONLY: $PRERELEASE_ONLY"
+  debug "MONOREPO: $MONOREPO"
   debug "BAIL_ON_MISSING: $BAIL_ON_MISSING"
   debug "AUTOFIX_LOCKFILE: $AUTOFIX_LOCKFILE"
   debug "PUBLISH_SCRIPT: $PUBLISH_SCRIPT"
+  debug "RELEASE_COMMAND: $RELEASE_COMMAND"
   debug "PRERELEASE_SCRIPTS: $PRERELEASE_SCRIPTS"
   debug "AVAILABLE_SCRIPTS:\n$AVAILABLE_SCRIPTS"
 fi
