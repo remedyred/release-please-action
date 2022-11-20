@@ -57,14 +57,20 @@ if [[ "$CONFIG_ONLY" == "true" ]]; then
   exit 0
 fi
 
+info "Running pre-release scripts"
 for script in "${PRERELEASE_SCRIPTS_ARRAY[@]}"; do
   runScript "$script"
 done
+sucess "Pre-release scripts finished"
 
 if [[ "$PRERELEASE_ONLY" != "true" ]]; then
+  info "Setting up release-please"
   echo "should-release=true" >>"$GITHUB_OUTPUT"
 
   if [[ -n "$RELEASE_COMMAND" ]]; then
+    info "Setting release command to $RELEASE_COMMAND"
     echo "release-command=$RELEASE_COMMAND" >>"$GITHUB_OUTPUT"
   fi
 fi
+
+success "Finished!"
