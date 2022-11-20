@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 INPUTS=${1:-}
 GITHUB_REPOSITORY=${2:-}
@@ -42,7 +40,10 @@ RELEASE_PLEASE_BASE_PARAMS+=("--repo-url=$GITHUB_REPOSITORY")
 [[ "$DRY_RUN" == "true" ]] || [[ "$DRY_RUN" == "publish-only" ]] && RELEASE_PLEASE_BASE_PARAMS+=("--dry-run")
 [[ "$DEBUG" == "true" ]] && RELEASE_PLEASE_BASE_PARAMS+=("--debug")
 
+info "Found packages: ${PACKAGES[*]}"
+
 for PACKAGE in $PACKAGES; do
+  info "Running release-please for $PACKAGE"
   packageName=$(jq -r ".name" "$PACKAGE"/package.json)
 
   RELEASE_PLEASE_PARAMS=("${RELEASE_PLEASE_BASE_PARAMS[@]}")
