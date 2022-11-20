@@ -3,12 +3,12 @@
 [[ -v __IS_SETUP ]] && return 0
 export __IS_SETUP=1
 
-LIB="$(dirname "${BASH_SOURCE[0]}")/lib"
+LIB="$(dirname "${BASH_SOURCE[0]}")"
 
-# shellcheck source=./lib/output.sh
+# shellcheck source=./output.sh
 . "$LIB/output.sh"
 
-# shellcheck source=./lib/scripts.sh
+# shellcheck source=./scripts.sh
 . "$LIB/scripts.sh"
 
 # Load vars from json

@@ -5,8 +5,8 @@ set -euo pipefail
 INPUTS=${1:-}
 RELEASES=${2:-}
 
-# shellcheck source=./common.sh
-. "$(dirname "${BASH_SOURCE[0]}")/common.sh" || {
+# shellcheck source=./lib/common.sh
+. "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh" || {
   echo "Failed to load common.sh"
   exit 1
 }
