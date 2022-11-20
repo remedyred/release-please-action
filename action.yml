@@ -36,7 +36,7 @@ inputs:
     description: "ONLY run prerelease scripts. [true/false] (default: false)"
     required: false
   MONOREPO:
-    description: "Monorepo mode. [true/false] (default: false)"
+    description: "Monorepo mode. [true/false/auto] (default: auto) - By default, will automatically detect if the repo is a monorepo."
     required: false
   AUTOFIX_LOCKFILE:
     description: "Autofix lockfile. [true/false] (default: true)"
