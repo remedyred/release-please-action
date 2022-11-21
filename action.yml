@@ -69,13 +69,13 @@ runs:
       shell: bash
 
     - name: Setup Node.js
-      if: ${{ steps.prerelease.outputs.should-release == 'true' && steps.release.outputs.releases_created }}
+      if: ${{ steps.prerelease.outputs.should-release == 'true' }}
       uses: actions/setup-node@v3.5.1
       with:
         node-version: "lts/*"
         cache: pnpm
 
     - name: Run release script
-      if: ${{ steps.prerelease.outputs.should-release == 'true' && steps.release.outputs.releases_created }}
-      run: ${{ github.action_path }}/src/release.sh '${{ toJSON(inputs) }}' '${{ github.repository }}' '${{ steps.release.outputs.paths_released }}'
+      if: ${{ steps.prerelease.outputs.should-release == 'true' }}
+      run: ${{ github.action_path }}/src/release.sh '${{ toJSON(inputs) }}' '${{ github.repository }}'
       shell: bash
