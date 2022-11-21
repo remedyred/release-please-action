@@ -1,14 +1,15 @@
 #!/bin/bash
 
-set -euo pipefail
+set -euxo pipefail
 
 INPUTS=${1:-}
 GITHUB_REPOSITORY=${2:-}
 RELEASES=${3:-}
 
 # shellcheck source=./lib/common.sh
-. "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh" || {
-  echo "Failed to load common.sh"
+. "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
+[[ -v __IS_SETUP ]] || {
+  echo "ERROR: common.sh not found"
   exit 1
 }
 
