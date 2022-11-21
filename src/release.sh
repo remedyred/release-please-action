@@ -4,7 +4,6 @@ set -euxo pipefail
 
 INPUTS=${1:-}
 GITHUB_REPOSITORY=${2:-}
-RELEASES=${3:-}
 
 # shellcheck source=./lib/common.sh
 . "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
@@ -47,7 +46,17 @@ RELEASE_PLEASE_BASE_PARAMS+=("--repo-url=$GITHUB_REPOSITORY")
 
 info "Found packages: ${PACKAGES[*]}"
 
+REBUILD=0
+BASE_PATH=$(pwd)
+[[ -f "turbo.json" ]] || REBUILD=1
+
 for PACKAGE in $PACKAGES; do
+
+  if ((REBUILD)) && [[ "$PACKAGE" != "$BASE_PATH" ]]; then
+    debug "Checking for build script in $PACKAGE"
+    runScript "build"
+  fi
+
   info "Running release-please for $PACKAGE"
   packageName=$(jq -r ".name" "$PACKAGE"/package.json)
 
@@ -62,27 +71,6 @@ for PACKAGE in $PACKAGES; do
 
   debug "RUN: release-please release-pr ${RELEASE_PLEASE_PARAMS[*]}"
   release-please release-pr "${RELEASE_PLEASE_PARAMS[@]}" || die "release-please failed to create a release PR"
-done
-
-REBUILD=0
-BASE_PATH=$(pwd)
-[[ -f "turbo.json" ]] || REBUILD=1
-
-echo "$RELEASES" | jq -r '.[]' | while read -r package_dir; do
-  if [[ "$package_dir" == "." ]]; then
-    cd "$BASE_PATH" || die "Could not cd into repo root"
-  else
-    cd "$BASE_PATH/$package_dir" || die "Could not cd into $package_dir"
-  fi
-
-  if ((REBUILD)) && [[ "$package_dir" != "." ]]; then
-    debug "Checking for build script in $package_dir"
-    runScript "build"
-  fi
-
-  debug "Publishing $package_dir"
-  publish
-  success "Published $package_dir"
 done
 
 success "Finished!"
