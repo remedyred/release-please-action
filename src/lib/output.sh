@@ -9,7 +9,7 @@ export GREY='\033[0;37m'
 export GRAY="$GREY"
 export NC='\033[0m'
 
-term_width="$(tput cols)"
+term_width="$(tput cols 2>/dev/null || echo 140)"
 padding="$(printf '%0.1s' ={1..500})"
 title() {
   printf ' %*.*s %s %*.*s\n' 0 "$(((term_width - 3 - ${#1}) / 2))" "$padding" "$1" 0 "$(((term_width - 2 - ${#1}) / 2))" "$padding"
@@ -65,7 +65,7 @@ line() {
   local style=${1:-" "}
   shift
   local line
-  line=$(printf "%${COLUMNS:-$(tput cols)}s" " ")
+  line=$(printf "%${term_width}s" " ")
   echo -e "${line// /${style}}"
 }
 export -f line
