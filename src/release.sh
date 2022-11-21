@@ -60,8 +60,11 @@ for PACKAGE in $PACKAGES; do
   info "Running release-please for $PACKAGE"
   packageName=$(jq -r ".name" "$PACKAGE"/package.json)
 
+  # set RELEASE_PLEASE_PATH to PACKAGE relative to repo root
+  RELEASE_PLEASE_PATH=$(realpath --relative-to="$BASE_PATH" "$PACKAGE")
+
   RELEASE_PLEASE_PARAMS=("${RELEASE_PLEASE_BASE_PARAMS[@]}")
-  RELEASE_PLEASE_PARAMS+=("--path=$PACKAGE")
+  RELEASE_PLEASE_PARAMS+=("--path=$RELEASE_PLEASE_PATH")
   RELEASE_PLEASE_PARAMS+=("--package-name=$packageName")
   RELEASE_PLEASE_PARAMS+=(--monorepo-tags)
   RELEASE_PLEASE_PARAMS+=(--pull-request-title-pattern="chore: release $packageName \${version}")
