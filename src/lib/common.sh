@@ -4,7 +4,6 @@
 export __IS_SETUP=1
 
 LIB="$(dirname "${BASH_SOURCE[0]}")"
-[[ -z "$TERM" ]] && export TERM=github
 
 # shellcheck source=./output.sh
 . "$LIB/output.sh"
