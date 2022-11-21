@@ -66,7 +66,7 @@ info "Running pre-release scripts"
 for script in "${PRERELEASE_SCRIPTS_ARRAY[@]}"; do
   runScript "$script"
 done
-sucess "Pre-release scripts finished"
+success "Pre-release scripts finished"
 
 if [[ "$PRERELEASE_ONLY" != "true" ]]; then
   info "Setting up release-please"
