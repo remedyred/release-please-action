@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euxo pipefail
+set -euo pipefail
 
 INPUTS=${1:-}
 GITHUB_REPOSITORY=${2:-}
