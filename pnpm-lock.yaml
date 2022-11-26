@@ -4,7 +4,7 @@ specifiers:
   '@snickbit/eslint-config': 1.4.1
   '@snickbit/semantic-release': 1.6.3
   eslint: 8.28.0
-  semantic-release: ^19.0.5
+  semantic-release: 19.0.5
 
 devDependencies:
   '@snickbit/eslint-config': 1.4.1_eslint@8.28.0
