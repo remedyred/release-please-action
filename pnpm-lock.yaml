@@ -2,13 +2,13 @@ lockfileVersion: 5.4
 
 specifiers:
   '@snickbit/eslint-config': 1.4.1
-  '@snickbit/semantic-release': 1.6.2
+  '@snickbit/semantic-release': 1.6.3
   eslint: 8.26.0
   semantic-release: ^19.0.5
 
 devDependencies:
   '@snickbit/eslint-config': 1.4.1_eslint@8.26.0
-  '@snickbit/semantic-release': 1.6.2_semantic-release@19.0.5
+  '@snickbit/semantic-release': 1.6.3_semantic-release@19.0.5
   eslint: 8.26.0
   semantic-release: 19.0.5
 
@@ -368,8 +368,8 @@ packages:
       - typescript
     dev: true
 
-  /@snickbit/semantic-release/1.6.2_semantic-release@19.0.5:
-    resolution: {integrity: sha512-rRAH1SgB04GdeLCQMGNk6pv+xNYK13v0BMiFIJRSk3Dv9owplFC/MAHPt/xHzNgF2Bm5/QmC3mEwkvnb6idM6g==}
+  /@snickbit/semantic-release/1.6.3_semantic-release@19.0.5:
+    resolution: {integrity: sha512-wkpqt3vCymU5rGOJgEuT+corDSJubTWZo4xMRlU/7OotYJ6zapeN/GhqJ06wFmhVNKMpi/Jm/lCtfz3pwyHJYw==}
     engines: {node: '>= 14.17'}
     dependencies:
       '@semantic-release/changelog': 6.0.1_semantic-release@19.0.5
