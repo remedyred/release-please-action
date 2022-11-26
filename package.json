@@ -14,7 +14,7 @@
 	},
 	"devDependencies": {
 		"@snickbit/eslint-config": "1.4.1",
-		"@snickbit/semantic-release": "1.6.2",
+		"@snickbit/semantic-release": "1.6.3",
 		"semantic-release": "^19.0.5",
 		"eslint": "8.26.0"
 	}
