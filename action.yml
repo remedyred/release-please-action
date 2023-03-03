@@ -83,7 +83,7 @@ runs:
       run: ${{ github.action_path }}/src/config.sh '${{ toJSON(inputs) }}'
       shell: bash
 
-    - uses: google-github-actions/release-please-action@v3.6.0
+    - uses: google-github-actions/release-please-action@v3.7.4
       if: ${{ steps.prerelease.outputs.should-release == 'true' }}
       id: release
       with:
