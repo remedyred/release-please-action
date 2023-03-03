@@ -74,6 +74,14 @@ autoBootstrap() {
   # skip the first package, since it's the root
   packages=$(echo "$packages" | tail -n +2)
 
+  if [[ ! -f "release-please-config.json" ]]; then
+    echo "{\"separate-pull-requests\": false}" >"release-please-config.json"
+  fi
+
+  if [[ ! -f ".release-please-manifest.json" ]]; then
+    echo "{}" >".release-please-manifest.json"
+  fi
+
   # check if these packages are in the release-please-config.json
   # if not, add them
   for package in $packages; do
@@ -85,19 +93,14 @@ autoBootstrap() {
 
     if [[ "$package_config" == "null" ]]; then
       info "Adding $package_name to release-please-config.json"
-      jq ".packages.\"$package_name\" = {}" release-please-config.json >release-please-config.json.tmp
-      mv release-please-config.json.tmp release-please-config.json
-      info "Committing release-please-config.json"
-      git add release-please-config.json
-      git commit -m "chore: add $package_name to release-please-config.json [skip ci]"
-      info "Pushing release-please-config.json"
-      git push
+      jqm ".packages.\"$package_name\" = {}" release-please-config.json
     fi
   done
 
-  if [[ ! -f ".release-please-manifest.json" ]]; then
-    echo "{}" >".release-please-manifest.json"
-  fi
+  info "Committing & pushing release-please config and manifest"
+  git add release-please-config.json .release-please-manifest.json
+  git commit -m "chore: bootstrap release-please config and manifest [skip ci]"
+  git push
 }
 
 if [[ "$AUTO_BOOTSTRAP" == "true" ]] && [[ "$MONOREPO" == "TRUE" ]]; then
