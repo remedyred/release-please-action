@@ -72,11 +72,10 @@ autoBootstrap() {
   local packages
   packages="$(pnpm ls -r --depth -1 --parseable)"
   # skip the first package, since it's the root
-  echo "$packages" | tail -n +2
+  packages=$(echo "$packages" | tail -n +2)
 
   # check if these packages are in the release-please-config.json
   # if not, add them
-
   for package in $packages; do
     local package_name
     package_name="$(basename "$package")"
@@ -95,6 +94,10 @@ autoBootstrap() {
       git push
     fi
   done
+
+  if [[ ! -f ".release-please-manifest.json" ]]; then
+    echo "{}" >".release-please-manifest.json"
+  fi
 }
 
 if [[ "$AUTO_BOOTSTRAP" == "true" ]] && [[ "$MONOREPO" == "TRUE" ]]; then
