@@ -27,6 +27,7 @@ PRERELEASE_ONLY=$(echo "$INPUTS" | jq -r '.PRERELEASE_ONLY')
 AUTOFIX_LOCKFILE=$(echo "$INPUTS" | jq -r '.AUTOFIX_LOCKFILE')
 MONOREPO=$(echo "$INPUTS" | jq -r '.MONOREPO')
 RELEASE_COMMAND=$(echo "$INPUTS" | jq -r '.RELEASE_COMMAND')
+AUTO_BOOTSTRAP=$(echo "$INPUTS" | jq -r '.AUTO_BOOTSTRAP')
 
 # Process Vars
 
@@ -44,6 +45,7 @@ AVAILABLE_SCRIPTS=$(npm run >/dev/null 2>&1 || true)
 [[ -z "$NO_BAIL" ]] && NO_BAIL=false
 [[ -z "$BAIL_ON_MISSING" ]] && BAIL_ON_MISSING=false
 [[ -z "$AUTOFIX_LOCKFILE" ]] && AUTOFIX_LOCKFILE=true
+[[ -z "$AUTO_BOOTSTRAP" ]] && AUTO_BOOTSTRAP=false
 [[ -z "$MONOREPO" ]] && MONOREPO=$(detectMonorepo)
 
 if [[ -z "$RELEASE_COMMAND" ]] && [[ "$MONOREPO" == "true" ]]; then

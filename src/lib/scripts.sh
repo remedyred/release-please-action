@@ -66,3 +66,4 @@ detectMonorepo(){
 
     echo ""
 }
+export -f detectMonorepo
