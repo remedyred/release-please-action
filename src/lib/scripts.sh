@@ -46,24 +46,23 @@ runScript() {
 }
 export -f runScript
 
+detectMonorepo() {
+  local workspace_files=("pnpm-workspace.yaml" "pnpm-workspace.yml" "lerna.json" "rush.json" "yarn-workspace.yaml" "yarn-workspace.yml" "bolt.json" "bolt-workspace.yaml" "bolt-workspace.yml" "workspaces.json" "workspaces.yaml" "workspaces.yml" "nx.json" "project.json")
 
-detectMonorepo(){
-    local workspace_files=("pnpm-workspace.yaml" "pnpm-workspace.yml" "lerna.json" "rush.json" "yarn-workspace.yaml" "yarn-workspace.yml" "bolt.json" "bolt-workspace.yaml" "bolt-workspace.yml" "workspaces.json" "workspaces.yaml" "workspaces.yml" "nx.json" "project.json")
-
-    for file in "${workspace_files[@]}"; do
-        if [[ -f "$file" ]]; then
-            echo "$file"
-            return
-        fi
-    done
-
-    if [[ -f "package.json" ]]; then
-        if [[ "$(jq -r '.workspaces' package.json)" != "null" ]]; then
-            echo "package.json"
-            return
-        fi
+  for file in "${workspace_files[@]}"; do
+    if [[ -f "$file" ]]; then
+      echo "$file"
+      return
     fi
+  done
 
-    echo ""
+  if [[ -f "package.json" ]]; then
+    if [[ "$(jq -r '.workspaces' package.json)" != "null" ]]; then
+      echo "package.json"
+      return
+    fi
+  fi
+
+  echo ""
 }
 export -f detectMonorepo
