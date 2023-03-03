@@ -47,6 +47,12 @@ inputs:
   AUTO_BOOTSTRAP:
     description: "Auto bootstrap new packages. [true/false] (default: false)"
     required: false
+  AUTO_COMMIT:
+    description: "Auto commit changes during release (does not apply to prerelease only runs). [true/false] (default: false)"
+    required: false
+  AUTO_COMMIT_PRERELEASE:
+    description: "Auto commit changes during prerelease only runs. [true/false] (default: false)"
+    required: false
 outputs:
   releases_created:
     description: Whether a release was created
