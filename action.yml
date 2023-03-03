@@ -48,10 +48,13 @@ inputs:
     description: "Auto bootstrap new packages. [true/false] (default: false)"
     required: false
   AUTO_COMMIT:
-    description: "Auto commit changes during release (does not apply to prerelease only runs). [true/false] (default: false)"
+    description: "Auto commit changes during prerelease (does not apply to prerelease only runs). [true/false] (default: false)"
     required: false
   AUTO_COMMIT_PRERELEASE:
     description: "Auto commit changes during prerelease only runs. [true/false] (default: false)"
+    required: false
+  AUTO_COMMIT_MESSAGE:
+    description: "Auto commit message. (default: 'chore: untracked changes from prerelease') [skip ci] will automatically be appended."
     required: false
 outputs:
   releases_created:

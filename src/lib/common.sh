@@ -30,6 +30,7 @@ RELEASE_COMMAND=$(echo "$INPUTS" | jq -r '.RELEASE_COMMAND')
 AUTO_BOOTSTRAP=$(echo "$INPUTS" | jq -r '.AUTO_BOOTSTRAP')
 AUTO_COMMIT=$(echo "$INPUTS" | jq -r '.AUTO_COMMIT')
 AUTO_COMMIT_PRERELEASE=$(echo "$INPUTS" | jq -r '.AUTO_COMMIT_PRERELEASE')
+AUTO_COMMIT_MESSAGE=$(echo "$INPUTS" | jq -r '.AUTO_COMMIT_MESSAGE')
 
 # Process Vars
 
@@ -51,6 +52,7 @@ AVAILABLE_SCRIPTS=$(npm run >/dev/null 2>&1 || true)
 [[ -z "$MONOREPO" ]] && MONOREPO=$(detectMonorepo)
 [[ -z "$AUTO_COMMIT" ]] && AUTO_COMMIT=false
 [[ -z "$AUTO_COMMIT_PRERELEASE" ]] && AUTO_COMMIT_PRERELEASE=false
+[[ -z "$AUTO_COMMIT_MESSAGE" ]] && AUTO_COMMIT_MESSAGE="chore: untracked changes from prerelease"
 
 if [[ -z "$RELEASE_COMMAND" ]] && [[ "$MONOREPO" == "true" ]]; then
   RELEASE_COMMAND="manifest"

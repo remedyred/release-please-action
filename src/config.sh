@@ -105,7 +105,7 @@ if [[ ("$AUTO_COMMIT" == "true" && "$PRERELEASE_ONLY" != "true") || "$AUTO_COMMI
   if [[ -n "$(git status --porcelain)" ]]; then
     # commit untracked changes created during prerelease, before moving into the release script
     git add .
-    git commit -m "chore: untracked changes from prerelease [skip ci]"
+    git commit -m "$AUTO_COMMIT_MESSAGE" -m "[skip ci]"
     git push
   fi
 fi
