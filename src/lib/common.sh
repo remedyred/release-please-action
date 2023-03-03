@@ -23,7 +23,6 @@ NO_BAIL=$(echo "$INPUTS" | jq -r '.NO_BAIL')
 BAIL_ON_MISSING=$(echo "$INPUTS" | jq -r '.BAIL_ON_MISSING')
 DRY_RUN=$(echo "$INPUTS" | jq -r '.DRY_RUN')
 DEBUG=$(echo "$INPUTS" | jq -r '.DEBUG')
-CONFIG_ONLY=$(echo "$INPUTS" | jq -r '.CONFIG_ONLY')
 PRERELEASE_ONLY=$(echo "$INPUTS" | jq -r '.PRERELEASE_ONLY')
 AUTOFIX_LOCKFILE=$(echo "$INPUTS" | jq -r '.AUTOFIX_LOCKFILE')
 MONOREPO=$(echo "$INPUTS" | jq -r '.MONOREPO')
@@ -45,14 +44,7 @@ AVAILABLE_SCRIPTS=$(npm run >/dev/null 2>&1 || true)
 [[ -z "$NO_BAIL" ]] && NO_BAIL=false
 [[ -z "$BAIL_ON_MISSING" ]] && BAIL_ON_MISSING=false
 [[ -z "$AUTOFIX_LOCKFILE" ]] && AUTOFIX_LOCKFILE=true
-[[ -z "$CONFIG_ONLY" ]] && CONFIG_ONLY=false
-[[ -z "$PRERELEASE_ONLY" ]] && PRERELEASE_ONLY=false
-
-if [[ -z "$MONOREPO" ]] && [[ ${#PACKAGES[@]} -gt 1 ]]; then
-  MONOREPO=true
-else
-  MONOREPO=false
-fi
+[[ -z "$MONOREPO" ]] && MONOREPO=$(detectMonorepo)
 
 if [[ -z "$RELEASE_COMMAND" ]] && [[ "$MONOREPO" == "true" ]]; then
   RELEASE_COMMAND="manifest"
@@ -61,13 +53,9 @@ fi
 debug "DRY_RUN: $DRY_RUN"
 debug "DEBUG: $DEBUG"
 debug "NO_BAIL: $NO_BAIL"
-debug "CONFIG_ONLY: $CONFIG_ONLY"
-debug "PRERELEASE_ONLY: $PRERELEASE_ONLY"
-debug "MONOREPO: $MONOREPO"
 debug "BAIL_ON_MISSING: $BAIL_ON_MISSING"
 debug "AUTOFIX_LOCKFILE: $AUTOFIX_LOCKFILE"
 debug "PUBLISH_SCRIPT: $PUBLISH_SCRIPT"
-debug "RELEASE_COMMAND: $RELEASE_COMMAND"
 debug "PRERELEASE_SCRIPTS: $PRERELEASE_SCRIPTS"
 debug "AVAILABLE_SCRIPTS:\n$AVAILABLE_SCRIPTS"
 
