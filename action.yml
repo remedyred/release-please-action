@@ -44,6 +44,9 @@ inputs:
   RELEASE_COMMAND:
     description: "Release Please Command. Single repos default to both, monorepos default to manifest. [github-release/release-pr/manifest/manifest-pr]"
     required: false
+  AUTO_BOOTSTRAP:
+    description: "Auto bootstrap new packages. [true/false] (default: false)"
+    required: false
 outputs:
   releases_created:
     description: Whether a release was created

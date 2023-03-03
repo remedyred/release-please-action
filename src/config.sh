@@ -59,6 +59,41 @@ if [[ "$CONFIG_ONLY" == "true" ]]; then
   exit 0
 fi
 
+autoBootstrap() {
+    if [[ ! -f "pnpm-workspace.yml" ]] && [[ ! -f "pnpm-workspace.yml" ]]; then
+        warn "Only PNPM workspaces are supported"
+        return
+    fi
+
+    info "Looking for packages to bootstrap"
+    local packages="$(pnpm ls -r --depth -1 --parseable)"
+    # skip the first package, since it's the root
+    echo "$packages" | tail -n +2
+
+    # check if these packages are in the release-please-config.json
+    # if not, add them
+
+    for package in $packages; do
+        local package_name="$(basename $package)"
+        local package_path="$(dirname $package)"
+        local package_config="$(jq -r ".packages.\"$package_name\"" release-please-config.json)"
+        if [[ "$package_config" == "null" ]]; then
+            info "Adding $package_name to release-please-config.json"
+            jq ".packages.\"$package_name\" = {}" release-please-config.json > release-please-config.json.tmp
+            mv release-please-config.json.tmp release-please-config.json
+            info "Committing release-please-config.json"
+            git add release-please-config.json
+            git commit -m "chore: add $package_name to release-please-config.json [skip ci]"
+            info "Pushing release-please-config.json"
+            git push
+        fi
+    done
+}
+
+if [[ "$AUTO_BOOTSTRAP" == "true" ]] && [[ "$MONOREPO" == "TRUE" ]]; then
+    autoBootstrap
+fi
+
 for script in "${PRERELEASE_SCRIPTS_ARRAY[@]}"; do
   runScript "$script"
 done
