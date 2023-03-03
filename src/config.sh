@@ -1,10 +1,15 @@
 #!/bin/bash
 
-SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+set -euo pipefail
+
 INPUTS=${1:-}
 
-# shellcheck source=./common.sh
-[[ -v __LOADED ]] || . "$SCRIPT_DIR"/common.sh
+# shellcheck source=./lib/common.sh
+. "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
+[[ -v __IS_SETUP ]] || {
+  echo "ERROR: common.sh not found"
+  exit 1
+}
 
 # Set GitHub Actions as the user
 git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -27,6 +32,8 @@ if [[ -n "$NPM_TOKEN" ]]; then
 else
   warn "No NPM_TOKEN provided, skipping NPM authentication"
 fi
+
+pnpm i -g release-please >/dev/null || die "Failed to install release-please"
 
 success "NPM configuration verified"
 
@@ -55,10 +62,66 @@ if [[ "$CONFIG_ONLY" == "true" ]]; then
   exit 0
 fi
 
+autoBootstrap() {
+  if [[ ! -f "pnpm-workspace.yml" ]] && [[ ! -f "pnpm-workspace.yml" ]]; then
+    warn "Only PNPM workspaces are supported"
+    return
+  fi
+
+  info "Looking for packages to bootstrap"
+  local packages
+  packages="$(pnpm ls -r --depth -1 --parseable)"
+  # skip the first package, since it's the root
+  echo "$packages" | tail -n +2
+
+  # check if these packages are in the release-please-config.json
+  # if not, add them
+
+  for package in $packages; do
+    local package_name
+    package_name="$(basename "$package")"
+
+    local package_config
+    package_config="$(jq -r ".packages.\"$package_name\"" release-please-config.json)"
+
+    if [[ "$package_config" == "null" ]]; then
+      info "Adding $package_name to release-please-config.json"
+      jq ".packages.\"$package_name\" = {}" release-please-config.json >release-please-config.json.tmp
+      mv release-please-config.json.tmp release-please-config.json
+      info "Committing release-please-config.json"
+      git add release-please-config.json
+      git commit -m "chore: add $package_name to release-please-config.json [skip ci]"
+      info "Pushing release-please-config.json"
+      git push
+    fi
+  done
+}
+
+if [[ "$AUTO_BOOTSTRAP" == "true" ]] && [[ "$MONOREPO" == "TRUE" ]]; then
+  autoBootstrap
+fi
+
 for script in "${PRERELEASE_SCRIPTS_ARRAY[@]}"; do
   runScript "$script"
 done
 
+if [[ -n "$(git status --porcelain)" ]]; then
+  if [[ "$FAIL_ON_DIRTY" != "false" ]]; then
+    if [[ "$FAIL_ON_DIRTY" == "true" ]]; then
+      die "Working tree is dirty, aborting"
+    else
+      die "$FAIL_ON_DIRTY"
+    fi
+  fi
+  if [[ ("$AUTO_COMMIT" == "true" && "$PRERELEASE_ONLY" != "true") || "$AUTO_COMMIT_PRERELEASE" == "true" ]]; then
+    # commit untracked changes created during prerelease, before moving into the release script
+    git add .
+    git commit -m "$AUTO_COMMIT_MESSAGE" -m "[skip ci]"
+    git push
+  fi
+fi
+
+# Outputs
 if [[ "$PRERELEASE_ONLY" != "true" ]]; then
   echo "should-release=true" >>"$GITHUB_OUTPUT"
 

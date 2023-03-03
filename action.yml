@@ -36,13 +36,28 @@ inputs:
     description: "ONLY run prerelease scripts. [true/false] (default: false)"
     required: false
   MONOREPO:
-    description: "Monorepo mode. [true/false] (default: false)"
+    description: "Monorepo mode. [true/false/auto] (default: auto) - By default, will automatically detect if the repo is a monorepo."
     required: false
   AUTOFIX_LOCKFILE:
     description: "Autofix lockfile. [true/false] (default: true)"
     required: false
   RELEASE_COMMAND:
     description: "Release Please Command. Single repos default to both, monorepos default to manifest. [github-release/release-pr/manifest/manifest-pr]"
+    required: false
+  AUTO_BOOTSTRAP:
+    description: "Auto bootstrap new packages. [true/false] (default: false)"
+    required: false
+  AUTO_COMMIT:
+    description: "Auto commit changes during prerelease (does not apply to prerelease only runs). [true/false] (default: false)"
+    required: false
+  AUTO_COMMIT_PRERELEASE:
+    description: "Auto commit changes during prerelease only runs. [true/false] (default: false)"
+    required: false
+  AUTO_COMMIT_MESSAGE:
+    description: "Auto commit message. (default: 'chore: untracked changes from prerelease') [skip ci] will automatically be appended."
+    required: false
+  FAIL_ON_DIRTY:
+    description: "Fail if there are untracked changes. [true/false/string error message] (default: false)"
     required: false
 outputs:
   releases_created:
@@ -65,30 +80,17 @@ runs:
     - name: Verify configuration & run prerelease scripts
       if: ${{ inputs.PRERELEASE_ONLY != 'true' }}
       id: prerelease
-      run: ${{ github.action_path }}/src/config.sh '${{ toJSON(inputs) }}'
+      run: ${{ github.action_path }}/src/config.sh '${{ toJSON(inputs) }}' '${{ github.repository }}'
       shell: bash
 
-    - uses: google-github-actions/release-please-action@v3.6.0
-      if: ${{ steps.prerelease.outputs.should-release == 'true' }}
-      id: release
-      with:
-        package-name: ${{ github.repository }}
-        token: ${{ inputs.GITHUB_TOKEN || github.token }}
-        monorepo-tags: ${{ inputs.MONOREPO == 'true' }}
-        command: ${{ steps.prerelease.outputs.release-command }}
-        separate-pull-requests: true
-        always-link-local: false
-        plugins: node-workspace
-        release-type: node
-
     - name: Setup Node.js
-      if: ${{ steps.prerelease.outputs.should-release == 'true' && steps.release.outputs.releases_created }}
+      if: ${{ steps.prerelease.outputs.should-release == 'true' }}
       uses: actions/setup-node@v3.5.1
       with:
         node-version: "lts/*"
         cache: pnpm
 
     - name: Run release script
-      if: ${{ steps.prerelease.outputs.should-release == 'true' && steps.release.outputs.releases_created }}
-      run: ${{ github.action_path }}/src/release.sh '${{ toJSON(inputs) }}' '${{ steps.release.outputs.paths_released }}'
+      if: ${{ steps.prerelease.outputs.should-release == 'true' }}
+      run: ${{ github.action_path }}/src/release.sh '${{ toJSON(inputs) }}' '${{ github.repository }}'
       shell: bash
