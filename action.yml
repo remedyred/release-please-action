@@ -56,6 +56,9 @@ inputs:
   AUTO_COMMIT_MESSAGE:
     description: "Auto commit message. (default: 'chore: untracked changes from prerelease') [skip ci] will automatically be appended."
     required: false
+  FAIL_ON_DIRTY:
+    description: "Fail if there are untracked changes. [true/false/string error message] (default: false)"
+    required: false
 outputs:
   releases_created:
     description: Whether a release was created

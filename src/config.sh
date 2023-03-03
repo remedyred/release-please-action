@@ -102,8 +102,15 @@ for script in "${PRERELEASE_SCRIPTS_ARRAY[@]}"; do
   runScript "$script"
 done
 
-if [[ ("$AUTO_COMMIT" == "true" && "$PRERELEASE_ONLY" != "true") || "$AUTO_COMMIT_PRERELEASE" == "true" ]]; then
-  if [[ -n "$(git status --porcelain)" ]]; then
+if [[ -n "$(git status --porcelain)" ]]; then
+  if [[ "$FAIL_ON_DIRTY" != "false" ]]; then
+    if [[ "$FAIL_ON_DIRTY" == "true" ]]; then
+      die "Working tree is dirty, aborting"
+    else
+      die "$FAIL_ON_DIRTY"
+    fi
+  fi
+  if [[ ("$AUTO_COMMIT" == "true" && "$PRERELEASE_ONLY" != "true") || "$AUTO_COMMIT_PRERELEASE" == "true" ]]; then
     # commit untracked changes created during prerelease, before moving into the release script
     git add .
     git commit -m "$AUTO_COMMIT_MESSAGE" -m "[skip ci]"
