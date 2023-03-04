@@ -45,6 +45,8 @@ RELEASE_PLEASE_BASE_PARAMS+=("--repo-url=$GITHUB_REPOSITORY")
 [[ "$DRY_RUN" == "true" ]] || [[ "$DRY_RUN" == "publish-only" ]] && RELEASE_PLEASE_BASE_PARAMS+=("--dry-run")
 [[ "$DEBUG" == "true" ]] && RELEASE_PLEASE_BASE_PARAMS+=("--debug")
 
+BASE_PATH=$(pwd)
+
 for PACKAGE in $PACKAGES; do
   packageName=$(jq -r ".name" "$PACKAGE"/package.json)
 
@@ -65,7 +67,6 @@ for PACKAGE in $PACKAGES; do
 done
 
 REBUILD=0
-BASE_PATH=$(pwd)
 [[ -f "turbo.json" ]] || REBUILD=1
 
 echo "$RELEASES" | jq -r '.[]' | while read -r package_dir; do

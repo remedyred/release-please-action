@@ -69,10 +69,9 @@ autoBootstrap() {
   fi
 
   info "Looking for packages to bootstrap"
-  local packages
-  packages="$(pnpm ls -r --depth -1 --parseable)"
   # skip the first package, since it's the root
-  packages=$(echo "$packages" | tail -n +2)
+  local pkgs
+  pkgs=$(echo "$PACKAGES" | tail -n +2)
 
   if [[ ! -f "release-please-config.json" ]]; then
     echo "{\"separate-pull-requests\": false}" >"release-please-config.json"
@@ -84,7 +83,7 @@ autoBootstrap() {
 
   # check if these packages are in the release-please-config.json
   # if not, add them
-  for package in $packages; do
+  for package in $pkgs; do
     local package_name
     package_name="$(basename "$package")"
 
