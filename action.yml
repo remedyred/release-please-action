@@ -27,7 +27,7 @@ inputs:
       If 'publish-only' is specified, all commands will run normally except for the 'publish' command, which will be run with the `--dry-run` flag."
     required: false
   DEBUG:
-    description: "Prints debug information. [true/false] (default: false)"
+    description: "Prints debug information. [true/false] (default: matching runner debug mode)"
     required: false
   CONFIG_ONLY:
     description: "Only verify configuration. [true/false] (default: false)"

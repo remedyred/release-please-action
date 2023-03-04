@@ -8,11 +8,19 @@ LIB="$(dirname "${BASH_SOURCE[0]}")"
 # shellcheck source=./output.sh
 . "$LIB/output.sh"
 
-# shellcheck source=./scripts.sh
-. "$LIB/scripts.sh"
-
 # Load vars from json
 [[ -n $INPUTS ]] || die "No JSON file specified"
+
+DEBUG=$(echo "$INPUTS" | jq -r '.DEBUG')
+[[ -z "$DEBUG" ]] && DEBUG="${RUNNER_DEBUG:-"false"}"
+
+if [[ "$DEBUG" == "true" ]]; then
+  set -x
+  export DEBUG
+fi
+
+# shellcheck source=./scripts.sh
+. "$LIB/scripts.sh"
 
 NPM_TOKEN=$(echo "$INPUTS" | jq -r '.NPM_TOKEN')
 GITHUB_TOKEN=$(echo "$INPUTS" | jq -r '.GITHUB_TOKEN')
@@ -22,7 +30,7 @@ PRERELEASE_SCRIPTS=$(echo "$INPUTS" | jq -r '.PRERELEASE_SCRIPTS')
 NO_BAIL=$(echo "$INPUTS" | jq -r '.NO_BAIL')
 BAIL_ON_MISSING=$(echo "$INPUTS" | jq -r '.BAIL_ON_MISSING')
 DRY_RUN=$(echo "$INPUTS" | jq -r '.DRY_RUN')
-DEBUG=$(echo "$INPUTS" | jq -r '.DEBUG')
+
 PRERELEASE_ONLY=$(echo "$INPUTS" | jq -r '.PRERELEASE_ONLY')
 AUTOFIX_LOCKFILE=$(echo "$INPUTS" | jq -r '.AUTOFIX_LOCKFILE')
 MONOREPO=$(echo "$INPUTS" | jq -r '.MONOREPO')
@@ -46,7 +54,6 @@ IFS=', ' read -r -a PRERELEASE_SCRIPTS_ARRAY <<<"$PRERELEASE_SCRIPTS"
 AVAILABLE_SCRIPTS=$(npm run >/dev/null 2>&1 || true)
 
 [[ -z "$DRY_RUN" ]] && DRY_RUN=false
-[[ -z "$DEBUG" ]] && DEBUG=false
 [[ -z "$NO_BAIL" ]] && NO_BAIL=false
 [[ -z "$BAIL_ON_MISSING" ]] && BAIL_ON_MISSING=false
 [[ -z "$AUTOFIX_LOCKFILE" ]] && AUTOFIX_LOCKFILE=true
