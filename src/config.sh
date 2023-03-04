@@ -63,7 +63,7 @@ if [[ "$CONFIG_ONLY" == "true" ]]; then
 fi
 
 autoBootstrap() {
-  if [[ ! -f "pnpm-workspace.yml" ]] && [[ ! -f "pnpm-workspace.yml" ]]; then
+  if [[ ! -f "pnpm-workspace.yml" ]] && [[ ! -f "pnpm-workspace.yaml" ]]; then
     warn "Only PNPM workspaces are supported"
     return
   fi
