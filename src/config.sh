@@ -104,6 +104,8 @@ autoBootstrap() {
 
 if [[ "$AUTO_BOOTSTRAP" == "true" ]] && [[ "$MONOREPO" == "TRUE" ]]; then
   autoBootstrap
+elif [[ ! -f "release-please-config.json" ]]; then
+  warn "auto-bootstrap is disabled, and no release-please-config.json was found"
 fi
 
 for script in "${PRERELEASE_SCRIPTS_ARRAY[@]}"; do
