@@ -58,14 +58,14 @@ AVAILABLE_SCRIPTS=$(npm run >/dev/null 2>&1 || true)
 [[ -z "$BAIL_ON_MISSING" ]] && BAIL_ON_MISSING=false
 [[ -z "$AUTOFIX_LOCKFILE" ]] && AUTOFIX_LOCKFILE=true
 [[ -z "$AUTO_BOOTSTRAP" ]] && AUTO_BOOTSTRAP=false
-[[ -z "$MONOREPO" ]] && MONOREPO=$(detectMonorepo)
+[[ -z "$MONOREPO" ]] && MONOREPO=${MONOREPO:-$(detectMonorepo)}
 [[ -z "$AUTO_COMMIT" ]] && AUTO_COMMIT=false
 [[ -z "$AUTO_COMMIT_PRERELEASE" ]] && AUTO_COMMIT_PRERELEASE=false
 [[ -z "$AUTO_COMMIT_MESSAGE" ]] && AUTO_COMMIT_MESSAGE="chore: untracked changes from prerelease"
 [[ -z "$FAIL_ON_DIRTY" ]] && FAIL_ON_DIRTY=false
 [[ -z "$CONFIG_ONLY" ]] && CONFIG_ONLY=false
 
-if [[ -z "$RELEASE_COMMAND" ]] && [[ "$MONOREPO" == "true" ]]; then
+if [[ -z "$RELEASE_COMMAND" ]] && [[ "$MONOREPO" != "false" ]]; then
   RELEASE_COMMAND="manifest"
 fi
 

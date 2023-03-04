@@ -63,7 +63,7 @@ detectMonorepo() {
     fi
   fi
 
-  echo ""
+  echo "false"
 }
 export -f detectMonorepo
 

@@ -102,7 +102,7 @@ autoBootstrap() {
   git push
 }
 
-if [[ "$AUTO_BOOTSTRAP" == "true" ]] && [[ "$MONOREPO" == "true" ]]; then
+if [[ "$AUTO_BOOTSTRAP" == "true" ]] && [[ "$MONOREPO" != "false" ]]; then
   autoBootstrap
 elif [[ ! -f "release-please-config.json" ]]; then
   warn "auto-bootstrap is disabled, and no release-please-config.json was found"
