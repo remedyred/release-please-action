@@ -70,8 +70,8 @@ export -f detectMonorepo
 
 # perform jq operations on a file directly
 jqm() {
-  local file="$1"
-  local query="$2"
+  local query="$1"
+  local file="$2"
   jq "$query" "$file" > "$file.tmp" && mv "$file.tmp" "$file"
 }
 export -f jqm
