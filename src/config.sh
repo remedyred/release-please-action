@@ -74,7 +74,7 @@ autoBootstrap() {
   pkgs=$(echo "$PACKAGES" | tail -n +2)
 
   if [[ ! -f "release-please-config.json" ]]; then
-    echo "{\"separate-pull-requests\": false}" >"release-please-config.json"
+    echo "{\"separate-pull-requests\": true}" >"release-please-config.json"
   fi
 
   if [[ ! -f ".release-please-manifest.json" ]]; then
