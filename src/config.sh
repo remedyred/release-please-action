@@ -86,13 +86,10 @@ autoBootstrap() {
 
   # check if these packages are in the release-please-config.json
   # if not, add them
-  BASE_PATH=$(pwd)
   for package in $pkgs; do
-    local pkg_path
-    pkg_path="$(realpath --relative-to="$BASE_PATH" "$package")"
-
+    # config expects the relative path to the package, not the package name
     local package_name
-    package_name=$(jq -r ".name" "$package"/package.json)
+    package_name=$(basename "$package")
 
     local package_version
     package_version=$(jq -r ".version" "$package"/package.json)
