@@ -86,16 +86,20 @@ autoBootstrap() {
 
   # check if these packages are in the release-please-config.json
   # if not, add them
+  BASE_PATH=$(pwd)
   for package in $pkgs; do
+    local package_name
+    package_name=$(realpath --relative-to="$BASE_PATH" "$package")
+
     local package_version
     package_version=$(jq -r ".version" "$package"/package.json)
 
     local package_config
-    package_config="$(jq -r ".packages.\"$package\"" release-please-config.json)"
+    package_config="$(jq -r ".packages.\"$package_name\"" release-please-config.json)"
 
     if [[ "$package_config" == "null" ]]; then
-      info "Adding $package to release-please-config.json"
-      jqm ".packages.\"$package\" = \"$package_version\"" release-please-config.json
+      info "Adding $package_name to release-please-config.json"
+      jqm ".packages.\"$package_name\" = \"$package_version\"" release-please-config.json
     fi
   done
 
