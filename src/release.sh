@@ -46,26 +46,32 @@ RELEASE_PLEASE_BASE_PARAMS+=("--repo-url=$GITHUB_REPOSITORY")
 [[ "$DEBUG" == "true" ]] && RELEASE_PLEASE_BASE_PARAMS+=("--debug")
 
 BASE_PATH=$(pwd)
+if [[ ! -f ".release-please-manifest.json" ]]; then
+  for PACKAGE in $PACKAGES; do
+    packageName=$(jq -r ".name" "$PACKAGE"/package.json)
 
-for PACKAGE in $PACKAGES; do
-  packageName=$(jq -r ".name" "$PACKAGE"/package.json)
+    # set RELEASE_PLEASE_PATH to PACKAGE relative to repo root
+    RELEASE_PLEASE_PATH=$(realpath --relative-to="$BASE_PATH" "$PACKAGE")
 
-  # set RELEASE_PLEASE_PATH to PACKAGE relative to repo root
-  RELEASE_PLEASE_PATH=$(realpath --relative-to="$BASE_PATH" "$PACKAGE")
+    RELEASE_PLEASE_PARAMS=("${RELEASE_PLEASE_BASE_PARAMS[@]}")
+    RELEASE_PLEASE_PARAMS+=("--path=$RELEASE_PLEASE_PATH")
+    RELEASE_PLEASE_PARAMS+=("--package-name=$packageName")
+    RELEASE_PLEASE_PARAMS+=(--monorepo-tags)
+    RELEASE_PLEASE_PARAMS+=(--pull-request-title-pattern="chore: release $packageName \${version}")
 
-  RELEASE_PLEASE_PARAMS=("${RELEASE_PLEASE_BASE_PARAMS[@]}")
-  RELEASE_PLEASE_PARAMS+=("--path=$RELEASE_PLEASE_PATH")
-  RELEASE_PLEASE_PARAMS+=("--package-name=$packageName")
-  RELEASE_PLEASE_PARAMS+=(--monorepo-tags)
-  RELEASE_PLEASE_PARAMS+=(--pull-request-title-pattern="chore: release $packageName \${version}")
+    debug "RUN: release-please github-release ${RELEASE_PLEASE_PARAMS[*]}"
+    release-please github-release "${RELEASE_PLEASE_PARAMS[@]}" || die "release-please failed to create a GitHub release"
 
-  debug "RUN: release-please github-release ${RELEASE_PLEASE_PARAMS[*]}"
-  release-please github-release "${RELEASE_PLEASE_PARAMS[@]}" || die "release-please failed to create a GitHub release"
+    debug "RUN: release-please release-pr ${RELEASE_PLEASE_PARAMS[*]}"
+    release-please release-pr "${RELEASE_PLEASE_PARAMS[@]}" || die "release-please failed to create a release PR"
+  done
+else
+  debug "RUN: release-please github-release"
+  release-please github-release
 
-  debug "RUN: release-please release-pr ${RELEASE_PLEASE_PARAMS[*]}"
-  release-please release-pr "${RELEASE_PLEASE_PARAMS[@]}" || die "release-please failed to create a release PR"
-done
-
+  debug "RUN: release-please release-pr"
+  release-please release-pr
+fi
 REBUILD=0
 [[ -f "turbo.json" ]] || REBUILD=1
 
