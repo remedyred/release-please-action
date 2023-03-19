@@ -77,7 +77,7 @@ autoBootstrap() {
   BOOTSTRAP_SHA=${GITHUB_SHA:-$(git rev-parse HEAD)}
 
   if [[ ! -f "release-please-config.json" ]]; then
-    echo "{\"separate-pull-requests\": true, \"bootstrap-sha\": \"$BOOTSTRAP_SHA\"}" >"release-please-config.json"
+    echo "{\"separate-pull-requests\": true, \"bootstrap-sha\": \"$BOOTSTRAP_SHA\", \"plugins\": [\"node-workspace\"]}" >"release-please-config.json"
   fi
 
   if [[ ! -f ".release-please-manifest.json" ]]; then
