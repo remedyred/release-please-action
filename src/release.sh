@@ -66,11 +66,11 @@ if [[ ! -f ".release-please-manifest.json" ]]; then
     release-please release-pr "${RELEASE_PLEASE_PARAMS[@]}" || die "release-please failed to create a release PR"
   done
 else
-  debug "RUN: release-please github-release"
-  release-please github-release
+  debug "RUN: release-please github-release ${RELEASE_PLEASE_BASE_PARAMS[*]}"
+  release-please github-release "${RELEASE_PLEASE_BASE_PARAMS[@]}"
 
-  debug "RUN: release-please release-pr"
-  release-please release-pr
+  debug "RUN: release-please release-pr ${RELEASE_PLEASE_BASE_PARAMS[*]}"
+  release-please release-pr "${RELEASE_PLEASE_BASE_PARAMS[@]}"
 fi
 REBUILD=0
 [[ -f "turbo.json" ]] || REBUILD=1
