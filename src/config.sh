@@ -89,10 +89,10 @@ autoBootstrap() {
     pkg_path="$(realpath --relative-to="$BASE_PATH" "$package")"
 
     local package_name
-    package_name=$(jq -r ".name" "$PACKAGE"/package.json)
+    package_name=$(jq -r ".name" "$package"/package.json)
 
     local package_version
-    package_version=$(jq -r ".version" "$PACKAGE"/package.json)
+    package_version=$(jq -r ".version" "$package"/package.json)
 
     local package_config
     package_config="$(jq -r ".packages.\"$package_name\"" release-please-config.json)"
