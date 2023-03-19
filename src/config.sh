@@ -102,7 +102,7 @@ autoBootstrap() {
     echo "!.release-please-manifest.json" >>.gitignore
   fi
   # also force add the manifest, just in case
-  git add -f release-please-config.json .release-please-manifest.json
+  git add -f release-please-config.json .release-please-manifest.json .gitignore
   git commit -m "chore: bootstrap release-please config and manifest [skip ci]"
   git push
 }
