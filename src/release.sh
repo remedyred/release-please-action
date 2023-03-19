@@ -67,7 +67,6 @@ if [[ ! -f ".release-please-manifest.json" ]]; then
   done
 else
   RELEASE_PLEASE_PARAMS=("${RELEASE_PLEASE_BASE_PARAMS[@]}")
-  RELEASE_PLEASE_PARAMS+=("--path=$BASE_PATH")
 
   debug "RUN: release-please github-release ${RELEASE_PLEASE_PARAMS[*]}"
   release-please github-release "${RELEASE_PLEASE_PARAMS[@]}"
