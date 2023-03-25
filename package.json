@@ -16,6 +16,6 @@
 		"@snickbit/eslint-config": "1.4.4",
 		"@snickbit/semantic-release": "1.6.3",
 		"eslint": "8.35.0",
-		"semantic-release": "19.0.5"
+		"semantic-release": "21.0.0"
 	}
 }
