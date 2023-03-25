@@ -85,7 +85,7 @@ runs:
 
     - name: Setup Node.js
       if: ${{ steps.prerelease.outputs.should-release == 'true' }}
-      uses: actions/setup-node@v3.5.1
+      uses: actions/setup-node@v3.6.0
       with:
         node-version: "lts/*"
         cache: pnpm
